@@ -1,0 +1,330 @@
+{
+  "nav": {
+    "rooms": "ルーム"
+  },
+  "section": {
+    "favorites": "お気に入り",
+    "channels": "チャンネル",
+    "directMessages": "ダイレクトメッセージ"
+  },
+  "filter": "ルームを絞り込む",
+  "viewMore": "さらに表示",
+  "viewLess": "表示を減らす",
+  "empty": "ルームはまだありません。Rocket.Chat で参加または作成すると、ここに表示されます。",
+  "noMatches": "「{{query}}」に一致するルームはありません",
+  "memberCount_one": "メンバー {{count}}人",
+  "memberCount_other": "メンバー {{count}}人",
+  "unread": {
+    "messages_one": "未読メッセージ {{count}}件",
+    "messages_other": "未読メッセージ {{count}}件",
+    "mentions_one": "メンション {{count}}件",
+    "mentions_other": "メンション {{count}}件",
+    "separator": "、"
+  },
+  "type": {
+    "channel": "公開チャンネル",
+    "private": "非公開チャンネル",
+    "direct": "ダイレクトメッセージ",
+    "discussion": "ディスカッション",
+    "team": "チーム",
+    "omnichannel": "オムニチャネル"
+  },
+  "action": {
+    "favorite": "お気に入りに追加",
+    "unfavorite": "お気に入りから削除",
+    "markRead": "既読にする",
+    "addMembers": "メンバーを追加",
+    "mute": "ミュート",
+    "unmute": "ミュートを解除",
+    "leave": "退出",
+    "roomInfo": "ルーム情報",
+    "notifications": "通知",
+    "collapseSidebar": "サイドバーを折りたたむ",
+    "expandSidebar": "サイドバーを展開",
+    "resizeSidebar": "サイドバーのサイズ変更 — ドラッグ、またはダブルクリックでリセット"
+  },
+  "info": {
+    "title": "ルーム情報",
+    "members": "メンバー",
+    "online": "オンライン",
+    "pinned": "ピン留め",
+    "files": "ファイル",
+    "links": "リンク",
+    "membersHeading": "メンバー（{{count}}人）",
+    "viewAllMembers": "すべてのメンバーを表示",
+    "you": "自分",
+    "admin": "管理者",
+    "owner": "所有者",
+    "messages": "メッセージ",
+    "createdAt": "作成日時"
+  },
+  "pinned": {
+    "by": "{{name}} がピン留め",
+    "dismiss": "ピン留めされたメッセージを閉じる",
+    "unpin": "ピン留めを解除",
+    "empty": "ピン留めされた項目はまだありません。"
+  },
+  "placeholder": {
+    "noRoom": "ルームを選択して開始",
+    "noRoomHint": "会話は左側に表示されます。",
+    "missing": "この会話は利用できません",
+    "missingHint": "削除されたか、アカウントがメンバーではなくなった可能性があります。左の一覧から別のルームを選択してください。"
+  },
+  "menu": {
+    "label": "{{name}} のルーム操作",
+    "hide": "非表示",
+    "markUnread": "未読にする",
+    "markRead": "既読にする",
+    "favorite": "お気に入り",
+    "unfavorite": "お気に入りから削除",
+    "leave": "退出",
+    "edit": "ルームを編集"
+  },
+  "create": {
+    "title": "ルームを作成",
+    "channel": "公開チャンネル",
+    "channelHint": "サーバー上の誰でも検索して参加できます。",
+    "private": "非公開チャンネル",
+    "privateHint": "招待されたユーザーだけが見つけられます。",
+    "direct": "ダイレクトメッセージ",
+    "directHint": "1人のユーザーとの非公開の会話です。",
+    "name": "名前",
+    "namePlaceholder": "例: product-design",
+    "nameHint": "英字、数字、ハイフンを使用できます。スペースは使用できません。",
+    "nameHintSpecialChars": "スペースと記号を使用できます。サーバーによってハイフンに変換されます。",
+    "nameInvalid": "このサーバーではその名前を使用できません。次の形式に一致する必要があります: {{pattern}}",
+    "nameTooLong": "ルーム名は最大{{max}}文字です。",
+    "nameSettingsTitle": "スペースやアクセント付き文字が必要ですか？",
+    "nameSettingsIntro": "どちらも管理者が変更できる Rocket.Chat サーバー設定です:",
+    "nameSettingsSpecialChars": "管理 → 設定 → レイアウト → ユーザーインターフェースで「ルーム名で特殊文字を許可」をオンにします。スペースと記号が受け付けられ、サーバーによってハイフンに変換されます。",
+    "nameSettingsUtf8": "管理 → 設定 → 一般 → UTF8 で「UTF8 チャンネル名の検証」を広げます。たとえばアクセント付き文字を許可するには [0-9a-zA-Z-_.À-ỹ]+ とします。ASCII 以外の名前にはこの設定が必要です。",
+    "nameSettingsAdminOnly": "どちらもサーバー全体に適用され、すぐに反映されます。変更後にこのドロワーを開き直してください。",
+    "topic": "トピック",
+    "description": "説明",
+    "members": "メンバーを追加",
+    "membersPlaceholder": "ユーザーを検索",
+    "membersHint": "省略できます。ルーム作成時に追加されます。",
+    "membersSelected": "{{count}}人を選択中。",
+    "membersEmpty": "候補のユーザーはいません。",
+    "membersNoMatches": "「{{query}}」に一致するユーザーはいません。",
+    "membersFailed": "ユーザーを読み込めませんでした。",
+    "readOnly": "読み取り専用",
+    "readOnlyHint": "所有者だけが投稿できます。",
+    "encrypted": "暗号化",
+    "encryptedHint": "エンドツーエンドで暗号化されます。メッセージは検索できません。",
+    "broadcast": "ブロードキャスト",
+    "broadcastHint": "所有者だけが投稿でき、全員がスレッドで返信できます。",
+    "submit": "作成",
+    "directSubmit": "会話を開く",
+    "notAllowed": "このサーバーではルームを作成できません。管理者に権限を依頼してください。",
+    "readOnlyBroadcastHint": "ブロードキャストチャンネルは常に読み取り専用です。",
+    "readOnlyDeniedHint": "ルームを読み取り専用にする権限がありません。",
+    "encryptedOffHint": "このサーバーではエンドツーエンド暗号化が無効です。",
+    "encryptedPrivateOnlyHint": "非公開チャンネルだけを暗号化できます。"
+  },
+  "edit": {
+    "title": "ルームを編集",
+    "avatar": "ルームの画像",
+    "announcement": "アナウンス",
+    "archived": "アーカイブ済み",
+    "archivedHint": "アーカイブを解除するまで誰も投稿できません。",
+    "makePrivate": "非公開",
+    "makePrivateHint": "招待されたユーザーだけが見つけられます。",
+    "submit": "変更を保存",
+    "announcementHint": "全員にルームの上部で表示されます。",
+    "makePrivateDeniedHint": "このルームの種類を変更する権限がありません。"
+  },
+  "leaveConfirm": {
+    "title": "{{name}} から退出しますか？",
+    "detail": "メッセージを受信しなくなります。再度招待してもらうことはできます。",
+    "confirm": "退出"
+  },
+  "bar": {
+    "resize": "パネルのサイズ変更 — ドラッグ、またはダブルクリックでリセット",
+    "title": {
+      "room-info": "ルーム情報",
+      "room-edit": "ルームを編集",
+      "members": "メンバー",
+      "membersCount": "メンバー（{{count}}人）",
+      "add-members": "メンバーを追加",
+      "user-info": "プロフィール",
+      "files": "ファイル",
+      "pinned": "ピン留めされたメッセージ",
+      "starred": "スター付きメッセージ",
+      "mentions": "メンション",
+      "threads": "スレッド",
+      "thread": "スレッド",
+      "search": "メッセージを検索",
+      "notifications": "通知設定",
+      "prune": "メッセージを一括削除",
+      "shortcuts": "キーボードショートカット"
+    }
+  },
+  "members": {
+    "search": "メンバーを検索",
+    "searchPlaceholder": "名前またはユーザー名で検索",
+    "filterOnline": "オンライン",
+    "filterAll": "すべて",
+    "empty": "まだ誰もいません。",
+    "noMatches": "「{{query}}」に一致するメンバーはいません",
+    "muted": "このルームでミュート中",
+    "role": {
+      "owner": "所有者",
+      "moderator": "モデレーター",
+      "leader": "リーダー"
+    },
+    "set": {
+      "owner": "所有者に設定",
+      "moderator": "モデレーターに設定",
+      "leader": "リーダーに設定"
+    },
+    "remove": {
+      "owner": "所有者から外す",
+      "moderator": "モデレーターから外す",
+      "leader": "リーダーから外す"
+    }
+  },
+  "addMembers": {
+    "search": "ユーザーを検索",
+    "searchPlaceholder": "名前またはユーザー名",
+    "hint": "このルームに追加するユーザーを検索します。",
+    "noMatches": "「{{query}}」に一致するユーザーはいません",
+    "submit_one": "{{count}}人を追加",
+    "submit_other": "{{count}}人を追加"
+  },
+  "userCard": {
+    "open": "{{name}} のプロフィールを表示",
+    "viewProfile": "プロフィール全体"
+  },
+  "roomCard": {
+    "open": "#{{name}} について",
+    "go": "ルームを開く",
+    "preview": "のぞいてみる",
+    "members_one": "メンバー {{count}} 人",
+    "members_other": "メンバー {{count}} 人",
+    "notFound": "このルームは見つかりませんでした。",
+    "unavailable": "このルームへのアクセス権がありません。"
+  },
+  "userInfo": {
+    "message": "メッセージ",
+    "mute": "ルーム内でミュート",
+    "unmute": "ルーム内のミュートを解除",
+    "remove": "ルームから削除",
+    "bio": "自己紹介",
+    "email": "メール",
+    "timezone": "タイムゾーン",
+    "serverRoles": "ロール",
+    "joinedAt": "参加日",
+    "removeConfirm": {
+      "title": "{{name}} を削除しますか？",
+      "detail": "{{room}} とその履歴にアクセスできなくなります。再度招待することはできます。"
+    }
+  },
+  "files": {
+    "search": "ファイルを検索",
+    "searchPlaceholder": "ファイル名で検索",
+    "empty": "ここにはまだ何もアップロードされていません。",
+    "noMatches": "「{{query}}」に一致するファイルはありません",
+    "download": "{{name}} をダウンロード",
+    "filter": {
+      "all": "すべて",
+      "image": "画像",
+      "video": "動画",
+      "audio": "音声",
+      "text": "テキスト",
+      "application": "ファイル"
+    }
+  },
+  "threads": {
+    "empty": "スレッドはまだありません。メッセージに返信して開始しましょう。"
+  },
+  "starred": {
+    "empty": "スター付きメッセージはまだありません。スターは自分だけに表示されます。",
+    "unstar": "スターを外す"
+  },
+  "mentions": {
+    "empty": "ここでは誰からもメンションされていません。"
+  },
+  "search": {
+    "label": "メッセージを検索",
+    "placeholder": "この会話を検索",
+    "hint": "入力してこの会話を検索します。",
+    "noMatches": "「{{query}}」に一致するものはありません",
+    "operatorsHint": "from:name、has:star、is:pinned、before:2024-01-01 などを試してください"
+  },
+  "notifications": {
+    "turnOn": "通知を受け取る",
+    "turnOnHint": "オフにすると、すべての端末でこのルームをミュートします。",
+    "muteGroupMentions": "@all と @here をミュート",
+    "muteGroupMentionsHint": "自分宛てのメンションは引き続き通知されます。",
+    "showCounter": "未読数を表示",
+    "showCounterHint": "ルーム一覧のバッジです。",
+    "showMentions": "メンション数を表示",
+    "showMentionsHint": "メンションだけを数えます。",
+    "desktop": "デスクトップ",
+    "mobile": "モバイル",
+    "email": "メール",
+    "alertLabel": "通知",
+    "soundLabel": "サウンド",
+    "alert": {
+      "default": "デフォルト",
+      "all": "すべてのメッセージ",
+      "mentions": "メンション",
+      "nothing": "通知しない"
+    },
+    "sound": {
+      "default": "デフォルト",
+      "none": "なし"
+    }
+  },
+  "prune": {
+    "intro": "このルームのメッセージを削除します。この操作は元に戻せません。",
+    "newerThan": "次の日付より新しい",
+    "olderThan": "次の日付より古い",
+    "onlyFrom": "送信者を限定",
+    "onlyFromPlaceholder": "alice, bob",
+    "onlyFromHint": "ユーザー名をカンマで区切ります。全員を対象にする場合は空欄にしてください。",
+    "inclusive": "境界の日付のメッセージを含める",
+    "inclusiveHint": "上記の日付と完全に一致するメッセージも削除します。",
+    "excludePinned": "ピン留めされたメッセージを残す",
+    "filesOnly": "添付ファイルだけを削除",
+    "filesOnlyHint": "メッセージは残し、ファイルだけを削除します。",
+    "ignoreThreads": "スレッドを残す",
+    "ignoreDiscussions": "ディスカッションを残す",
+    "submit": "メッセージを一括削除",
+    "pruned_one": "{{count}}件のメッセージを削除しました。",
+    "pruned_other": "{{count}}件のメッセージを削除しました。",
+    "nothingPruned": "フィルターに一致するものはありませんでした。",
+    "confirm": {
+      "title": "これらのメッセージを削除しますか？",
+      "detail": "フィルターに一致するメッセージが {{room}} から完全に削除されます。この操作は元に戻せません。",
+      "confirm": "削除"
+    }
+  },
+  "shortcuts": {
+    "group": {
+      "composer": "メッセージ欄",
+      "formatting": "書式設定",
+      "navigation": "ナビゲーション"
+    },
+    "send": "メッセージを送信",
+    "newline": "改行",
+    "editLast": "最後のメッセージを編集",
+    "cancelEdit": "編集をキャンセル",
+    "bold": "太字",
+    "italic": "斜体",
+    "underline": "下線",
+    "strike": "取り消し線",
+    "code": "コード",
+    "searchRooms": "ルームを検索",
+    "closePanel": "サイドパネルを閉じる"
+  },
+  "quick": {
+    "favorite": "お気に入り",
+    "unfavorite": "お気に入り済み",
+    "members": "メンバー",
+    "files": "ファイル",
+    "notifications": "通知",
+    "leave": "退出"
+  }
+}

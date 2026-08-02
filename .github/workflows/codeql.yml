@@ -1,0 +1,33 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main, develop, 'release/**', 'hotfix/**']
+  pull_request:
+    branches: [main, develop, 'release/**', 'hotfix/**']
+  schedule:
+    # Weekly, so newly published queries reach an unchanged codebase too —
+    # most advisories arrive long after the code that they affect was written.
+    - cron: '17 4 * * 1'
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyse:
+    name: Analyse TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          # `security-and-quality` adds maintainability queries on top of the
+          # default security set; the extra noise is worth it on a small codebase.
+          queries: security-and-quality
+
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:javascript-typescript'

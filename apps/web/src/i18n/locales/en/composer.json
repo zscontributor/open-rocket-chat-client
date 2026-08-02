@@ -1,0 +1,139 @@
+{
+  "placeholder": "Message {{room}}",
+  "placeholderThread": "Reply in thread",
+  "action": {
+    "send": "Send message",
+    "attachFiles": "Attach files",
+    "attachFolder": "Attach a folder",
+    "formatting": "Formatting",
+    "emoji": "Emoji",
+    "gif": "GIF",
+    "preview": "Preview message",
+    "hidePreview": "Hide preview",
+    "saveEdit": "Save changes",
+    "moreActions": "More actions",
+    "voiceMessage": "Record a voice message",
+    "resize": "Resize the message box — drag, or double-click to reset"
+  },
+  "formatting": {
+    "title": "Formatting",
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "strike": "Strikethrough",
+    "code": "Code",
+    "codeBlock": "Code block"
+  },
+  "preview": {
+    "title": "Preview",
+    "empty": "Nothing to preview yet."
+  },
+  "editing": {
+    "label": "Editing:",
+    "noText": "(no text)",
+    "cancel": "Stop editing"
+  },
+  "enterToSend": {
+    "label": "Enter to send"
+  },
+  "longMessage": {
+    "title": "Message too long",
+    "detail": "This message is longer than the {{limit}} characters this server allows. Send it as a text file instead?",
+    "confirm": "Send as file"
+  },
+  "hint": {
+    "send": "Enter to send, Shift + Enter for a new line",
+    "sendWithModifier": "{{mod}} + Enter to send, Enter for a new line",
+    "editing": "Enter to save, Esc to cancel",
+    "editingWithModifier": "{{mod}} + Enter to save, Esc to cancel"
+  },
+  "dropZone": {
+    "title": "Drop files to attach",
+    "hint": "They are added to the message box, so you can caption them before sending.",
+    "blocked": {
+      "uploads": "File uploads are turned off on this server.",
+      "readOnly": "This room is read-only.",
+      "editing": "Finish editing the message before attaching files."
+    }
+  },
+  "attachments": {
+    "heading_one": "{{count}} attachment",
+    "heading_other": "{{count}} attachments",
+    "remove": "Remove {{name}}",
+    "removeAll": "Remove all",
+    "preview": "Preview {{name}}",
+    "uploading": "Uploading {{name}}…",
+    "failed": "{{name}} failed to upload",
+    "tooLarge": "{{name}} is larger than the {{limit}} limit",
+    "captionPlaceholder": "Add a caption",
+    "play": "Play {{name}}"
+  },
+  "autocomplete": {
+    "label": "Suggestions",
+    "loading": "Searching…",
+    "searchUsers": "Search people",
+    "searchRooms": "Search rooms",
+    "noResults": "Nothing matches “{{query}}”",
+    "empty": "Nothing to suggest.",
+    "notInRoom": "Not in this room",
+    "special": {
+      "all": "Notify everyone in this room",
+      "here": "Notify everyone who is online"
+    }
+  },
+  "error": {
+    "sendFailed": "Message could not be sent. {{reason}}",
+    "tooLong": "This message is longer than the {{limit}} characters this server allows.",
+    "editFailed": "Message could not be edited. {{reason}}",
+    "commandFailed": "/{{command}} could not be run. {{reason}}",
+    "commandDenied": "You do not have permission to run /{{command}} in this room.",
+    "gifAttachFailed": "The GIF could not be attached, so its link was added to the message instead."
+  },
+  "gifPicker": {
+    "search": "Search GIPHY",
+    "trending": "Trending",
+    "results": "Results",
+    "noResults": "No GIFs match “{{query}}”",
+    "poweredBy": "Powered by GIPHY",
+    "error": {
+      "unavailable": "GIPHY could not be reached.",
+      "unauthorised": "GIPHY rejected the API key. Check it in Settings."
+    },
+    "needsKey": {
+      "title": "GIF search needs a GIPHY key",
+      "hint": "GIPHY gives them away free. Add one in Settings and the picker starts working.",
+      "action": "Open settings"
+    }
+  },
+  "voice": {
+    "recording": "Recording a voice message",
+    "starting": "Starting…",
+    "hint": "Stop to attach the recording, or discard it.",
+    "remaining": "{{seconds}}s left",
+    "stop": "Stop and attach",
+    "cancel": "Discard recording",
+    "error": {
+      "denied": "Microphone access was blocked. Allow it in your browser to record a voice message.",
+      "unsupported": "This browser cannot record audio.",
+      "failed": "The recording could not be started."
+    }
+  },
+  "emojiPicker": {
+    "title": "Emoji",
+    "search": "Search emoji",
+    "noResults": "No emoji match “{{query}}”",
+    "custom": "Custom",
+    "frequent": "Frequently used",
+    "group": {
+      "smileys-emotion": "Smileys & Emotion",
+      "people-body": "People & Body",
+      "animals-nature": "Animals & Nature",
+      "food-drink": "Food & Drink",
+      "travel-places": "Travel & Places",
+      "activities": "Activities",
+      "objects": "Objects",
+      "symbols": "Symbols",
+      "flags": "Flags"
+    }
+  }
+}

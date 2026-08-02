@@ -1,0 +1,50 @@
+{
+  "title": "Cài đặt",
+  "appearance": {
+    "title": "Giao diện",
+    "theme": "Chủ đề",
+    "colorScheme": "Chế độ màu",
+    "scheme": {
+      "system": "Theo hệ thống",
+      "light": "Sáng",
+      "dark": "Tối"
+    },
+    "themeBy": "bởi {{author}}"
+  },
+  "notifications": {
+    "title": "Thông báo",
+    "unsupported": "Trình duyệt này không hiển thị được thông báo trên màn hình. Tính năng này cũng cần kết nối bảo mật (HTTPS).",
+    "enable": "Bật",
+    "permission": {
+      "granted": "Thông báo trên màn hình đang bật",
+      "default": "Thông báo trên màn hình đang tắt",
+      "denied": "Thông báo trên màn hình đang bị chặn"
+    },
+    "permissionHint": {
+      "granted": "Bạn sẽ nhận được thông báo với những tin nhắn mà máy chủ cho là đáng để ngắt quãng công việc của bạn.",
+      "default": "Trình duyệt chưa được hỏi, hoặc bạn đã bỏ qua yêu cầu cấp quyền.",
+      "denied": "Trình duyệt đã chặn thông báo cho trang này. Hãy cho phép lại trong phần cài đặt trang của trình duyệt."
+    },
+    "muteFocused": "Im lặng với phòng đang mở",
+    "muteFocusedHint": "Không thông báo về phòng bạn đang đọc, miễn là cửa sổ này đang được chọn.",
+    "requireInteraction": "Giữ thông báo trên màn hình",
+    "requireInteractionHint": "Giữ thông báo cho tới khi bạn tự đóng thay vì tự ẩn sau vài giây.",
+    "soundVolume": "Âm báo tin nhắn",
+    "soundVolumeHint": "Phát khi có tin nhắn mới, trừ khi âm báo riêng của phòng được đặt là Không. Vẫn hoạt động ngay cả khi thông báo bị chặn.",
+    "soundPreview": "Nghe thử âm báo",
+    "soundOff": "Tắt"
+  },
+  "gif": {
+    "title": "Ảnh GIF",
+    "apiKey": "Khoá API GIPHY",
+    "apiKeyPlaceholder": "Dán khoá API GIPHY",
+    "apiKeyHint": "Chức năng tìm ảnh GIF trong khung soạn tin dùng GIPHY nên cần khoá riêng của bạn. Khoá chỉ được lưu trong trình duyệt này và không gửi lên máy chủ.",
+    "usingBuiltIn": "Đang dùng khoá được cấu hình sẵn khi build",
+    "getKey": "Lấy khoá API GIPHY miễn phí"
+  },
+  "language": {
+    "title": "Ngôn ngữ",
+    "label": "Ngôn ngữ hiển thị",
+    "helpTranslate": "Đóng góp bản dịch"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "lightbox": {
+    "title": "Media viewer",
+    "close": "Close viewer",
+    "previous": "Previous",
+    "next": "Next",
+    "download": "Download",
+    "openInNewTab": "Open in a new tab",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetZoom": "Reset zoom",
+    "counter": "{{current}} of {{total}}",
+    "unsupported": "This file cannot be previewed.",
+    "loadFailed": "This file could not be loaded."
+  },
+  "type": {
+    "image": "Image",
+    "video": "Video",
+    "audio": "Audio",
+    "file": "File"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "lightbox": {
+    "title": "Trình xem media",
+    "close": "Đóng trình xem",
+    "previous": "Trước",
+    "next": "Tiếp",
+    "download": "Tải xuống",
+    "openInNewTab": "Mở ở tab mới",
+    "zoomIn": "Phóng to",
+    "zoomOut": "Thu nhỏ",
+    "resetZoom": "Đặt lại kích thước",
+    "counter": "{{current}} / {{total}}",
+    "unsupported": "Không xem trước được tệp này.",
+    "loadFailed": "Không tải được tệp này."
+  },
+  "type": {
+    "image": "Hình ảnh",
+    "video": "Video",
+    "audio": "Âm thanh",
+    "file": "Tệp"
+  }
+}

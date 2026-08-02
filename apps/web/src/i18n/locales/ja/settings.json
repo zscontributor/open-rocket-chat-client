@@ -1,0 +1,50 @@
+{
+  "title": "設定",
+  "appearance": {
+    "title": "外観",
+    "theme": "テーマ",
+    "colorScheme": "カラーモード",
+    "scheme": {
+      "system": "システム設定に合わせる",
+      "light": "ライト",
+      "dark": "ダーク"
+    },
+    "themeBy": "作成者: {{author}}"
+  },
+  "notifications": {
+    "title": "通知",
+    "unsupported": "このブラウザーではデスクトップ通知を表示できません。また、安全な HTTPS 接続が必要です。",
+    "enable": "有効にする",
+    "permission": {
+      "granted": "デスクトップ通知はオンです",
+      "default": "デスクトップ通知はオフです",
+      "denied": "デスクトップ通知はブロックされています"
+    },
+    "permissionHint": {
+      "granted": "サーバーが通知すべきと判断したメッセージをお知らせします。",
+      "default": "ブラウザーにまだ許可を求めていないか、許可リクエストが閉じられました。",
+      "denied": "このサイトの通知がブラウザーでブロックされています。再度有効にするにはサイト設定で通知を許可してください。"
+    },
+    "muteFocused": "表示中の会話をミュート",
+    "muteFocusedHint": "このウィンドウにフォーカスがある間、現在読んでいるルームの通知を表示しません。",
+    "requireInteraction": "通知を画面に残す",
+    "requireInteractionHint": "数秒後に自動で消さず、閉じるまで各通知を表示します。",
+    "soundVolume": "通知音",
+    "soundVolumeHint": "メッセージが届いたときに再生します。ルーム側の通知音が「なし」の場合を除きます。通知がブロックされていても再生されます。",
+    "soundPreview": "通知音を再生",
+    "soundOff": "オフ"
+  },
+  "gif": {
+    "title": "GIF",
+    "apiKey": "GIPHY API キー",
+    "apiKeyPlaceholder": "GIPHY API キーを貼り付け",
+    "apiKeyHint": "メッセージ欄の GIF 検索には、個人の GIPHY キーが必要です。キーはこのブラウザーに保存され、サーバーには送信されません。",
+    "usingBuiltIn": "アプリに組み込まれたキーを使用中",
+    "getKey": "無料の GIPHY API キーを取得"
+  },
+  "language": {
+    "title": "言語",
+    "label": "表示言語",
+    "helpTranslate": "翻訳に協力"
+  }
+}

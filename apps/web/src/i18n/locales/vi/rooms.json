@@ -1,0 +1,326 @@
+{
+  "nav": {
+    "rooms": "Danh sách phòng"
+  },
+  "section": {
+    "favorites": "Yêu thích",
+    "channels": "Kênh",
+    "directMessages": "Tin nhắn riêng"
+  },
+  "filter": "Lọc phòng",
+  "viewMore": "Xem thêm",
+  "viewLess": "Thu gọn",
+  "empty": "Chưa có phòng nào. Hãy tham gia hoặc tạo phòng trong Rocket.Chat, phòng sẽ hiện ở đây.",
+  "noMatches": "Không có phòng nào khớp với “{{query}}”",
+  "memberCount_one": "{{count}} thành viên",
+  "memberCount_other": "{{count}} thành viên",
+  "unread": {
+    "messages_other": "{{count}} tin nhắn chưa đọc",
+    "mentions_other": "{{count}} lượt nhắc đến bạn",
+    "separator": ", "
+  },
+  "type": {
+    "channel": "Kênh công khai",
+    "private": "Kênh riêng tư",
+    "direct": "Tin nhắn riêng",
+    "discussion": "Thảo luận",
+    "team": "Nhóm",
+    "omnichannel": "Omnichannel"
+  },
+  "action": {
+    "favorite": "Thêm vào yêu thích",
+    "unfavorite": "Bỏ khỏi yêu thích",
+    "markRead": "Đánh dấu đã đọc",
+    "addMembers": "Thêm thành viên",
+    "mute": "Tắt thông báo",
+    "unmute": "Bật thông báo",
+    "leave": "Rời phòng",
+    "roomInfo": "Thông tin phòng",
+    "notifications": "Thông báo",
+    "collapseSidebar": "Thu gọn thanh bên",
+    "expandSidebar": "Mở rộng thanh bên",
+    "resizeSidebar": "Đổi độ rộng thanh bên — kéo, hoặc nhấp đúp để khôi phục"
+  },
+  "info": {
+    "title": "Thông tin phòng",
+    "members": "Thành viên",
+    "online": "Đang trực tuyến",
+    "pinned": "Đã ghim",
+    "files": "Tệp",
+    "links": "Liên kết",
+    "membersHeading": "Thành viên ({{count}})",
+    "viewAllMembers": "Xem tất cả thành viên",
+    "you": "Bạn",
+    "admin": "Quản trị",
+    "owner": "Chủ phòng",
+    "messages": "Tin nhắn",
+    "createdAt": "Ngày tạo"
+  },
+  "pinned": {
+    "by": "{{name}} đã ghim",
+    "dismiss": "Ẩn tin nhắn đã ghim",
+    "unpin": "Bỏ ghim",
+    "empty": "Chưa ghim tin nhắn nào."
+  },
+  "placeholder": {
+    "noRoom": "Chọn một phòng để bắt đầu",
+    "noRoomHint": "Các cuộc trò chuyện của bạn nằm ở cột bên trái.",
+    "missing": "Cuộc trò chuyện này không khả dụng",
+    "missingHint": "Phòng có thể đã bị xoá, hoặc tài khoản của bạn không còn là thành viên. Hãy chọn một phòng khác ở cột bên trái."
+  },
+  "menu": {
+    "label": "Thao tác với phòng {{name}}",
+    "hide": "Ẩn",
+    "markUnread": "Đánh dấu chưa đọc",
+    "markRead": "Đánh dấu đã đọc",
+    "favorite": "Yêu thích",
+    "unfavorite": "Bỏ yêu thích",
+    "leave": "Rời phòng",
+    "edit": "Sửa phòng"
+  },
+  "create": {
+    "title": "Tạo phòng",
+    "channel": "Kênh công khai",
+    "channelHint": "Mọi người trên máy chủ đều tìm và tham gia được.",
+    "private": "Kênh riêng tư",
+    "privateHint": "Chỉ người được mời mới tìm thấy.",
+    "direct": "Tin nhắn riêng",
+    "directHint": "Cuộc trò chuyện riêng với một người.",
+    "name": "Tên phòng",
+    "namePlaceholder": "ví dụ: product-design",
+    "nameHint": "Chữ, số và dấu gạch ngang. Không có khoảng trắng.",
+    "nameHintSpecialChars": "Cho phép khoảng trắng và dấu câu; máy chủ sẽ đổi chúng thành dấu gạch ngang.",
+    "nameInvalid": "Máy chủ không cho phép tên này. Tên phải khớp: {{pattern}}",
+    "nameTooLong": "Tên phòng tối đa {{max}} ký tự.",
+    "nameSettingsTitle": "Cần khoảng trắng hoặc ký tự có dấu?",
+    "nameSettingsIntro": "Cả hai đều là thiết lập trên máy chủ Rocket.Chat, quản trị viên có thể đổi:",
+    "nameSettingsSpecialChars": "Admin → Settings → Layout → User Interface → bật \"Allow Special Characters in Room Names\". Khi đó khoảng trắng và dấu câu được chấp nhận, máy chủ tự đổi thành dấu gạch ngang.",
+    "nameSettingsUtf8": "Admin → Settings → General → UTF8 → nới \"UTF8 Channel Names Validation\", ví dụ thành [0-9a-zA-Z-_.À-ỹ]+ để nhận chữ có dấu. Đây mới là thứ cần cho tên tiếng Việt thật sự.",
+    "nameSettingsAdminOnly": "Cả hai áp dụng cho toàn máy chủ và có hiệu lực ngay — sau đó mở lại drawer này.",
+    "topic": "Chủ đề",
+    "description": "Mô tả",
+    "members": "Thêm thành viên",
+    "membersPlaceholder": "Tìm người dùng",
+    "membersHint": "Không bắt buộc. Họ được thêm ngay khi phòng được tạo.",
+    "membersSelected": "Đã chọn {{count}} người.",
+    "membersEmpty": "Không có gợi ý nào.",
+    "membersNoMatches": "Không ai khớp “{{query}}”.",
+    "membersFailed": "Không tải được danh sách người dùng.",
+    "readOnly": "Chỉ đọc",
+    "readOnlyHint": "Chỉ chủ phòng được đăng bài.",
+    "encrypted": "Mã hoá",
+    "encryptedHint": "Mã hoá đầu cuối. Không tìm kiếm được nội dung.",
+    "broadcast": "Phát thanh",
+    "broadcastHint": "Chỉ chủ phòng đăng bài; mọi người trả lời trong luồng.",
+    "submit": "Tạo",
+    "directSubmit": "Mở cuộc trò chuyện",
+    "notAllowed": "Máy chủ này không cho phép bạn tạo phòng. Hãy liên hệ quản trị viên để được cấp quyền.",
+    "readOnlyBroadcastHint": "Kênh phát thanh luôn ở chế độ chỉ đọc.",
+    "readOnlyDeniedHint": "Bạn không có quyền đặt phòng ở chế độ chỉ đọc.",
+    "encryptedOffHint": "Máy chủ này đã tắt mã hoá đầu cuối.",
+    "encryptedPrivateOnlyHint": "Chỉ kênh riêng tư mới có thể mã hoá."
+  },
+  "edit": {
+    "title": "Sửa phòng",
+    "avatar": "Ảnh phòng",
+    "announcement": "Thông báo",
+    "archived": "Đã lưu trữ",
+    "archivedHint": "Không ai đăng được cho tới khi bỏ lưu trữ.",
+    "makePrivate": "Riêng tư",
+    "makePrivateHint": "Chỉ người được mời mới tìm thấy.",
+    "submit": "Lưu thay đổi",
+    "announcementHint": "Hiển thị ở đầu phòng cho mọi người.",
+    "makePrivateDeniedHint": "Bạn không có quyền thay đổi loại phòng này."
+  },
+  "leaveConfirm": {
+    "title": "Rời {{name}}?",
+    "detail": "Bạn sẽ ngừng nhận tin nhắn. Bạn có thể được mời lại.",
+    "confirm": "Rời phòng"
+  },
+  "bar": {
+    "resize": "Đổi kích thước bảng — kéo, hoặc nhấp đúi để đặt lại",
+    "title": {
+      "room-info": "Thông tin phòng",
+      "room-edit": "Sửa phòng",
+      "members": "Thành viên",
+      "membersCount": "Thành viên ({{count}})",
+      "add-members": "Thêm thành viên",
+      "user-info": "Hồ sơ",
+      "files": "Tệp",
+      "pinned": "Tin nhắn đã ghim",
+      "starred": "Tin nhắn đã đánh dấu",
+      "mentions": "Nhắc đến",
+      "threads": "Luồng",
+      "thread": "Luồng",
+      "search": "Tìm tin nhắn",
+      "notifications": "Tuỳ chọn thông báo",
+      "prune": "Dọn tin nhắn",
+      "shortcuts": "Phím tắt"
+    }
+  },
+  "members": {
+    "search": "Tìm thành viên",
+    "searchPlaceholder": "Tìm theo tên hoặc tên đăng nhập",
+    "filterOnline": "Đang hoạt động",
+    "filterAll": "Tất cả",
+    "empty": "Chưa có ai ở đây.",
+    "noMatches": "Không có thành viên nào khớp “{{query}}”",
+    "muted": "Bị tắt tiếng trong phòng này",
+    "role": {
+      "owner": "Chủ phòng",
+      "moderator": "Điều hành viên",
+      "leader": "Trưởng nhóm"
+    },
+    "set": {
+      "owner": "Đặt làm chủ phòng",
+      "moderator": "Đặt làm điều hành viên",
+      "leader": "Đặt làm trưởng nhóm"
+    },
+    "remove": {
+      "owner": "Bỏ quyền chủ phòng",
+      "moderator": "Bỏ quyền điều hành viên",
+      "leader": "Bỏ quyền trưởng nhóm"
+    }
+  },
+  "addMembers": {
+    "search": "Tìm người",
+    "searchPlaceholder": "Tên hoặc tên đăng nhập",
+    "hint": "Tìm người để thêm vào phòng này.",
+    "noMatches": "Không có ai khớp “{{query}}”",
+    "submit_other": "Thêm {{count}} người"
+  },
+  "userCard": {
+    "open": "Xem hồ sơ của {{name}}",
+    "viewProfile": "Hồ sơ đầy đủ"
+  },
+  "roomCard": {
+    "open": "Giới thiệu #{{name}}",
+    "go": "Mở phòng",
+    "preview": "Xem thử",
+    "members_one": "{{count}} thành viên",
+    "members_other": "{{count}} thành viên",
+    "notFound": "Không tìm thấy phòng này.",
+    "unavailable": "Bạn không có quyền truy cập phòng này."
+  },
+  "userInfo": {
+    "message": "Nhắn tin",
+    "mute": "Tắt tiếng trong phòng",
+    "unmute": "Bật tiếng trong phòng",
+    "remove": "Xoá khỏi phòng",
+    "bio": "Giới thiệu",
+    "email": "Email",
+    "timezone": "Múi giờ",
+    "serverRoles": "Vai trò",
+    "joinedAt": "Thành viên từ",
+    "removeConfirm": {
+      "title": "Xoá {{name}}?",
+      "detail": "Họ sẽ mất quyền truy cập {{room}} và lịch sử phòng. Bạn có thể mời lại."
+    }
+  },
+  "files": {
+    "search": "Tìm tệp",
+    "searchPlaceholder": "Tìm theo tên tệp",
+    "empty": "Chưa có tệp nào được tải lên.",
+    "noMatches": "Không có tệp nào khớp “{{query}}”",
+    "download": "Tải xuống {{name}}",
+    "filter": {
+      "all": "Tất cả",
+      "image": "Ảnh",
+      "video": "Video",
+      "audio": "Âm thanh",
+      "text": "Văn bản",
+      "application": "Tệp"
+    }
+  },
+  "threads": {
+    "empty": "Chưa có luồng nào. Trả lời một tin nhắn để bắt đầu."
+  },
+  "starred": {
+    "empty": "Chưa đánh dấu tin nhắn nào. Chỉ mình bạn thấy danh sách này.",
+    "unstar": "Bỏ đánh dấu"
+  },
+  "mentions": {
+    "empty": "Chưa ai nhắc đến bạn ở đây."
+  },
+  "search": {
+    "label": "Tìm tin nhắn",
+    "placeholder": "Tìm trong cuộc trò chuyện này",
+    "hint": "Nhập để tìm trong cuộc trò chuyện này.",
+    "noMatches": "Không có kết quả cho “{{query}}”",
+    "operatorsHint": "Thử from:tên, has:star, is:pinned hoặc before:2024-01-01"
+  },
+  "notifications": {
+    "turnOn": "Nhận thông báo",
+    "turnOnHint": "Tắt để im lặng phòng này ở mọi nơi.",
+    "muteGroupMentions": "Tắt @all và @here",
+    "muteGroupMentionsHint": "Nhắc đến trực tiếp vẫn báo cho bạn.",
+    "showCounter": "Hiện số chưa đọc",
+    "showCounterHint": "Huy hiệu trong danh sách phòng.",
+    "showMentions": "Hiện số lần nhắc đến",
+    "showMentionsHint": "Chỉ đếm các lần nhắc đến.",
+    "desktop": "Máy tính",
+    "mobile": "Di động",
+    "email": "Email",
+    "alertLabel": "Thông báo",
+    "soundLabel": "Âm thanh",
+    "alert": {
+      "default": "Mặc định",
+      "all": "Mọi tin nhắn",
+      "mentions": "Nhắc đến",
+      "nothing": "Không"
+    },
+    "sound": {
+      "default": "Mặc định",
+      "none": "Không"
+    }
+  },
+  "prune": {
+    "intro": "Xoá tin nhắn trong phòng này. Không thể hoàn tác.",
+    "newerThan": "Mới hơn",
+    "olderThan": "Cũ hơn",
+    "onlyFrom": "Chỉ từ",
+    "onlyFromPlaceholder": "alice, bob",
+    "onlyFromHint": "Tên đăng nhập, cách nhau bằng dấu phẩy. Để trống nghĩa là mọi người.",
+    "inclusive": "Bao gồm tin nhắn ở mốc thời gian",
+    "inclusiveHint": "Xoá cả tin nhắn nằm đúng vào các mốc trên.",
+    "excludePinned": "Giữ tin nhắn đã ghim",
+    "filesOnly": "Chỉ xoá tệp đính kèm",
+    "filesOnlyHint": "Tin nhắn được giữ lại; tệp bị xoá.",
+    "ignoreThreads": "Giữ luồng",
+    "ignoreDiscussions": "Giữ thảo luận",
+    "submit": "Dọn tin nhắn",
+    "pruned_other": "Đã xoá {{count}} tin nhắn.",
+    "nothingPruned": "Không có gì khớp với bộ lọc.",
+    "confirm": {
+      "title": "Xoá những tin nhắn này?",
+      "detail": "Các tin nhắn khớp bộ lọc sẽ bị xoá vĩnh viễn khỏi {{room}}. Không thể hoàn tác.",
+      "confirm": "Xoá"
+    }
+  },
+  "shortcuts": {
+    "group": {
+      "composer": "Ô soạn tin",
+      "formatting": "Định dạng",
+      "navigation": "Điều hướng"
+    },
+    "send": "Gửi tin nhắn",
+    "newline": "Xuống dòng",
+    "editLast": "Sửa tin nhắn cuối của bạn",
+    "cancelEdit": "Huỷ chỉnh sửa",
+    "bold": "In đậm",
+    "italic": "In nghiêng",
+    "underline": "Gạch chân",
+    "strike": "Gạch ngang",
+    "code": "Mã",
+    "searchRooms": "Tìm phòng",
+    "closePanel": "Đóng bảng bên"
+  },
+  "quick": {
+    "favorite": "Yêu thích",
+    "unfavorite": "Đã thích",
+    "members": "Thành viên",
+    "files": "Tệp",
+    "notifications": "Thông báo",
+    "leave": "Rời"
+  }
+}

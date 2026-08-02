@@ -1,0 +1,330 @@
+{
+  "nav": {
+    "rooms": "Rooms"
+  },
+  "section": {
+    "favorites": "Favorites",
+    "channels": "Channels",
+    "directMessages": "Direct Messages"
+  },
+  "filter": "Filter rooms",
+  "viewMore": "View more",
+  "viewLess": "View less",
+  "empty": "No rooms yet. Join or create one in Rocket.Chat and it will appear here.",
+  "noMatches": "No rooms match “{{query}}”",
+  "memberCount_one": "{{count}} member",
+  "memberCount_other": "{{count}} members",
+  "unread": {
+    "messages_one": "{{count}} unread message",
+    "messages_other": "{{count}} unread messages",
+    "mentions_one": "{{count}} mention",
+    "mentions_other": "{{count}} mentions",
+    "separator": ", "
+  },
+  "type": {
+    "channel": "Public Channel",
+    "private": "Private Channel",
+    "direct": "Direct Message",
+    "discussion": "Discussion",
+    "team": "Team",
+    "omnichannel": "Omnichannel"
+  },
+  "action": {
+    "favorite": "Add to favorites",
+    "unfavorite": "Remove from favorites",
+    "markRead": "Mark as read",
+    "addMembers": "Add members",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "leave": "Leave",
+    "roomInfo": "Room info",
+    "notifications": "Notifications",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar",
+    "resizeSidebar": "Resize sidebar — drag, or double-click to reset"
+  },
+  "info": {
+    "title": "Room Info",
+    "members": "Members",
+    "online": "Online",
+    "pinned": "Pinned",
+    "files": "Files",
+    "links": "Links",
+    "membersHeading": "Members ({{count}})",
+    "viewAllMembers": "View all members",
+    "you": "You",
+    "admin": "Admin",
+    "owner": "Owner",
+    "messages": "Messages",
+    "createdAt": "Created"
+  },
+  "pinned": {
+    "by": "Pinned by {{name}}",
+    "dismiss": "Dismiss pinned message",
+    "unpin": "Unpin",
+    "empty": "Nothing pinned yet."
+  },
+  "placeholder": {
+    "noRoom": "Pick a room to start",
+    "noRoomHint": "Your conversations are listed on the left.",
+    "missing": "This conversation isn't available",
+    "missingHint": "It may have been deleted, or your account may no longer be a member. Pick another from the list on the left."
+  },
+  "menu": {
+    "label": "Room actions for {{name}}",
+    "hide": "Hide",
+    "markUnread": "Mark Unread",
+    "markRead": "Mark Read",
+    "favorite": "Favorite",
+    "unfavorite": "Unfavorite",
+    "leave": "Leave",
+    "edit": "Edit room"
+  },
+  "create": {
+    "title": "Create a room",
+    "channel": "Public Channel",
+    "channelHint": "Anyone on the server can find and join it.",
+    "private": "Private Channel",
+    "privateHint": "Only invited people can find it.",
+    "direct": "Direct Message",
+    "directHint": "A private conversation with one person.",
+    "name": "Name",
+    "namePlaceholder": "e.g. product-design",
+    "nameHint": "Letters, digits and dashes. No spaces.",
+    "nameHintSpecialChars": "Spaces and punctuation are allowed; the server turns them into dashes.",
+    "nameInvalid": "This server does not allow this name. It must match: {{pattern}}",
+    "nameTooLong": "A room name can be at most {{max}} characters.",
+    "nameSettingsTitle": "Need spaces or accented characters?",
+    "nameSettingsIntro": "Both are Rocket.Chat server settings that an administrator can change:",
+    "nameSettingsSpecialChars": "Admin → Settings → Layout → User Interface → turn on \"Allow Special Characters in Room Names\". Spaces and punctuation are then accepted, and the server converts them to dashes.",
+    "nameSettingsUtf8": "Admin → Settings → General → UTF8 → widen \"UTF8 Channel Names Validation\", for example to [0-9a-zA-Z-_.À-ỹ]+ to accept accented letters. This is what a genuinely non-ASCII name needs.",
+    "nameSettingsAdminOnly": "Both apply to the whole server and take effect straight away — reopen this drawer afterwards.",
+    "topic": "Topic",
+    "description": "Description",
+    "members": "Add members",
+    "membersPlaceholder": "Search for people",
+    "membersHint": "Optional. They are added when the room is created.",
+    "membersSelected": "{{count}} selected.",
+    "membersEmpty": "No people to suggest.",
+    "membersNoMatches": "Nobody matches “{{query}}”.",
+    "membersFailed": "Could not load people.",
+    "readOnly": "Read only",
+    "readOnlyHint": "Only owners can post.",
+    "encrypted": "Encrypted",
+    "encryptedHint": "End-to-end encrypted. Messages cannot be searched.",
+    "broadcast": "Broadcast",
+    "broadcastHint": "Only owners can post; everyone can reply in threads.",
+    "submit": "Create",
+    "directSubmit": "Open conversation",
+    "notAllowed": "This server does not let you create rooms. Ask an administrator for the permission.",
+    "readOnlyBroadcastHint": "A broadcast channel is always read only.",
+    "readOnlyDeniedHint": "You do not have permission to make a room read only.",
+    "encryptedOffHint": "This server has end-to-end encryption switched off.",
+    "encryptedPrivateOnlyHint": "Only private channels can be encrypted."
+  },
+  "edit": {
+    "title": "Edit room",
+    "avatar": "Room picture",
+    "announcement": "Announcement",
+    "archived": "Archived",
+    "archivedHint": "Nobody can post until it is unarchived.",
+    "makePrivate": "Private",
+    "makePrivateHint": "Only invited people can find it.",
+    "submit": "Save changes",
+    "announcementHint": "Shown at the top of the room for everyone.",
+    "makePrivateDeniedHint": "You do not have permission to change this room's type."
+  },
+  "leaveConfirm": {
+    "title": "Leave {{name}}?",
+    "detail": "You will stop receiving messages. You can be invited back.",
+    "confirm": "Leave"
+  },
+  "bar": {
+    "resize": "Resize panel — drag, or double-click to reset",
+    "title": {
+      "room-info": "Room Info",
+      "room-edit": "Edit room",
+      "members": "Members",
+      "membersCount": "Members ({{count}})",
+      "add-members": "Add members",
+      "user-info": "Profile",
+      "files": "Files",
+      "pinned": "Pinned Messages",
+      "starred": "Starred Messages",
+      "mentions": "Mentions",
+      "threads": "Threads",
+      "thread": "Thread",
+      "search": "Search Messages",
+      "notifications": "Notification Preferences",
+      "prune": "Prune Messages",
+      "shortcuts": "Keyboard Shortcuts"
+    }
+  },
+  "members": {
+    "search": "Search members",
+    "searchPlaceholder": "Search by name or username",
+    "filterOnline": "Online",
+    "filterAll": "All",
+    "empty": "Nobody here yet.",
+    "noMatches": "No members match “{{query}}”",
+    "muted": "Muted in this room",
+    "role": {
+      "owner": "Owner",
+      "moderator": "Moderator",
+      "leader": "Leader"
+    },
+    "set": {
+      "owner": "Set as owner",
+      "moderator": "Set as moderator",
+      "leader": "Set as leader"
+    },
+    "remove": {
+      "owner": "Remove as owner",
+      "moderator": "Remove as moderator",
+      "leader": "Remove as leader"
+    }
+  },
+  "addMembers": {
+    "search": "Search for people",
+    "searchPlaceholder": "Name or username",
+    "hint": "Search for people to add to this room.",
+    "noMatches": "Nobody matches “{{query}}”",
+    "submit_one": "Add {{count}} person",
+    "submit_other": "Add {{count}} people"
+  },
+  "userCard": {
+    "open": "View {{name}}'s profile",
+    "viewProfile": "Full profile"
+  },
+  "roomCard": {
+    "open": "About #{{name}}",
+    "go": "Open room",
+    "preview": "Take a look",
+    "members_one": "{{count}} member",
+    "members_other": "{{count}} members",
+    "notFound": "This room could not be found.",
+    "unavailable": "You do not have access to this room."
+  },
+  "userInfo": {
+    "message": "Message",
+    "mute": "Mute in room",
+    "unmute": "Unmute in room",
+    "remove": "Remove from room",
+    "bio": "Bio",
+    "email": "Email",
+    "timezone": "Timezone",
+    "serverRoles": "Roles",
+    "joinedAt": "Member since",
+    "removeConfirm": {
+      "title": "Remove {{name}}?",
+      "detail": "They will lose access to {{room}} and its history. They can be invited back."
+    }
+  },
+  "files": {
+    "search": "Search files",
+    "searchPlaceholder": "Search by file name",
+    "empty": "Nothing has been uploaded here yet.",
+    "noMatches": "No files match “{{query}}”",
+    "download": "Download {{name}}",
+    "filter": {
+      "all": "All",
+      "image": "Images",
+      "video": "Videos",
+      "audio": "Audio",
+      "text": "Text",
+      "application": "Files"
+    }
+  },
+  "threads": {
+    "empty": "No threads yet. Reply to a message to start one."
+  },
+  "starred": {
+    "empty": "Nothing starred yet. Starred messages are private to you.",
+    "unstar": "Remove star"
+  },
+  "mentions": {
+    "empty": "Nobody has mentioned you here."
+  },
+  "search": {
+    "label": "Search messages",
+    "placeholder": "Search this conversation",
+    "hint": "Type to search this conversation.",
+    "noMatches": "Nothing matches “{{query}}”",
+    "operatorsHint": "Try from:name, has:star, is:pinned or before:2024-01-01"
+  },
+  "notifications": {
+    "turnOn": "Receive alerts",
+    "turnOnHint": "Turn off to silence this room everywhere.",
+    "muteGroupMentions": "Mute @all and @here",
+    "muteGroupMentionsHint": "Direct mentions still alert you.",
+    "showCounter": "Show unread counter",
+    "showCounterHint": "The badge in the room list.",
+    "showMentions": "Show mention counter",
+    "showMentionsHint": "Only mentions are counted.",
+    "desktop": "Desktop",
+    "mobile": "Mobile",
+    "email": "Email",
+    "alertLabel": "Alert",
+    "soundLabel": "Sound",
+    "alert": {
+      "default": "Default",
+      "all": "All messages",
+      "mentions": "Mentions",
+      "nothing": "Nothing"
+    },
+    "sound": {
+      "default": "Default",
+      "none": "None"
+    }
+  },
+  "prune": {
+    "intro": "Deletes messages in this room. This cannot be undone.",
+    "newerThan": "Newer than",
+    "olderThan": "Older than",
+    "onlyFrom": "Only from",
+    "onlyFromPlaceholder": "alice, bob",
+    "onlyFromHint": "Usernames, separated by commas. Leave empty for everyone.",
+    "inclusive": "Include the boundary messages",
+    "inclusiveHint": "Delete messages sitting exactly on the dates above.",
+    "excludePinned": "Keep pinned messages",
+    "filesOnly": "Only remove attachments",
+    "filesOnlyHint": "The messages stay; their files are deleted.",
+    "ignoreThreads": "Keep threads",
+    "ignoreDiscussions": "Keep discussions",
+    "submit": "Prune messages",
+    "pruned_one": "{{count}} message deleted.",
+    "pruned_other": "{{count}} messages deleted.",
+    "nothingPruned": "Nothing matched those filters.",
+    "confirm": {
+      "title": "Delete these messages?",
+      "detail": "Messages matching your filters will be permanently removed from {{room}}. This cannot be undone.",
+      "confirm": "Delete"
+    }
+  },
+  "shortcuts": {
+    "group": {
+      "composer": "Message box",
+      "formatting": "Formatting",
+      "navigation": "Navigation"
+    },
+    "send": "Send message",
+    "newline": "New line",
+    "editLast": "Edit your last message",
+    "cancelEdit": "Cancel editing",
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "strike": "Strikethrough",
+    "code": "Code",
+    "searchRooms": "Search rooms",
+    "closePanel": "Close the side panel"
+  },
+  "quick": {
+    "favorite": "Favorite",
+    "unfavorite": "Favorited",
+    "members": "Members",
+    "files": "Files",
+    "notifications": "Notify",
+    "leave": "Leave"
+  }
+}

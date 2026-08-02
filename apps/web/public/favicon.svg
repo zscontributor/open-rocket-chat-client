@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Open Rocket.Chat">
+  <title>Open Rocket.Chat</title>
+  <style>
+    .tile { fill: #c2762b; }
+    .mark { fill: #ffffff; stroke: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      .tile { fill: #1c1815; }
+      .mark { fill: #d5893d; stroke: #d5893d; }
+    }
+  </style>
+  <rect class="tile" width="512" height="512" rx="116"/>
+  <g class="mark"><g transform="translate(256 256) scale(1.26) translate(-256 -256)"><path d="M168.1 355.0 L90.9 357.0 L119.1 285.1 Z"   stroke-width="12" stroke-linejoin="round"/><circle cx="258" cy="240" r="136" fill="none"  stroke-width="40"/><circle cx="190" cy="240" r="22" /><circle cx="258" cy="240" r="22" /><circle cx="326" cy="240" r="22" /></g></g>
+</svg>

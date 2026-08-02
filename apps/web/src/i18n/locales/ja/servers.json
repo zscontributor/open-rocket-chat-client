@@ -1,0 +1,24 @@
+{
+  "rail": {
+    "label": "サーバー",
+    "add": "サーバーを追加",
+    "switchTo": "{{name}} に切り替え"
+  },
+  "add": {
+    "title": "サーバーを追加",
+    "description": "別の Rocket.Chat サーバーにサインインします。両方の接続が維持され、いつでも切り替えられます。",
+    "allConnected": "このゲートウェイで利用できるすべてのサーバーにサインイン済みです。",
+    "gatewayServer": "ゲートウェイの .env の ROCKETCHAT_SERVERS で定義された「{{name}}」にサインインします。",
+    "chooseGatewayServer": "サインインするサーバーを選択してください。これらの名前はゲートウェイの .env の ROCKETCHAT_SERVERS で定義されています。",
+    "serverList": "ROCKETCHAT_SERVERS で定義されたサーバー",
+    "cancel": "キャンセル"
+  },
+  "menu": {
+    "label": "サーバーのオプション",
+    "disconnect": "{{name}} から切断",
+    "connectedAs": "{{username}} としてサインイン中"
+  },
+  "status": {
+    "unreachable": "接続できません"
+  }
+}

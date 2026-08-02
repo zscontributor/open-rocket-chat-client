@@ -1,0 +1,50 @@
+{
+  "title": "Settings",
+  "appearance": {
+    "title": "Appearance",
+    "theme": "Theme",
+    "colorScheme": "Colour scheme",
+    "scheme": {
+      "system": "Match system",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "themeBy": "by {{author}}"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unsupported": "This browser cannot show desktop notifications. They also need a secure (HTTPS) connection.",
+    "enable": "Turn on",
+    "permission": {
+      "granted": "Desktop notifications are on",
+      "default": "Desktop notifications are off",
+      "denied": "Desktop notifications are blocked"
+    },
+    "permissionHint": {
+      "granted": "You will be told about messages your server decides are worth interrupting you for.",
+      "default": "Your browser has not been asked yet, or the request was dismissed.",
+      "denied": "Your browser blocked them for this site. Allow notifications in its site settings to turn them back on."
+    },
+    "muteFocused": "Mute the conversation on screen",
+    "muteFocusedHint": "Stay quiet about the room you are already reading, as long as this window has focus.",
+    "requireInteraction": "Keep notifications on screen",
+    "requireInteractionHint": "Leave each notification up until you dismiss it instead of hiding it after a few seconds.",
+    "soundVolume": "Notification sound",
+    "soundVolumeHint": "Played when a message arrives, unless the room's own sound is set to None. Works even when notifications are blocked.",
+    "soundPreview": "Play the notification sound",
+    "soundOff": "Off"
+  },
+  "gif": {
+    "title": "GIFs",
+    "apiKey": "GIPHY API key",
+    "apiKeyPlaceholder": "Paste a GIPHY API key",
+    "apiKeyHint": "GIF search in the message box runs against GIPHY, which needs a key of your own. It is kept in this browser and never sent to the server.",
+    "usingBuiltIn": "Using the key this app was built with",
+    "getKey": "Get a free GIPHY API key"
+  },
+  "language": {
+    "title": "Language",
+    "label": "Display language",
+    "helpTranslate": "Help translate"
+  }
+}

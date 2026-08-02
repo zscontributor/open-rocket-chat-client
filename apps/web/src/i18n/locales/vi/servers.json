@@ -1,0 +1,24 @@
+{
+  "rail": {
+    "label": "Máy chủ",
+    "add": "Thêm máy chủ",
+    "switchTo": "Chuyển sang {{name}}"
+  },
+  "add": {
+    "title": "Thêm máy chủ",
+    "description": "Đăng nhập vào một máy chủ Rocket.Chat khác. Cả hai vẫn được kết nối và bạn có thể chuyển qua lại bất cứ lúc nào.",
+    "allConnected": "Bạn đã đăng nhập vào tất cả máy chủ mà gateway này cung cấp.",
+    "gatewayServer": "Bạn đang đăng nhập vào \"{{name}}\", được khai báo trong ROCKETCHAT_SERVERS ở tệp .env của gateway.",
+    "chooseGatewayServer": "Chọn máy chủ bạn muốn đăng nhập. Các tên dưới đây lấy từ ROCKETCHAT_SERVERS trong tệp .env của gateway.",
+    "serverList": "Máy chủ khai báo trong ROCKETCHAT_SERVERS",
+    "cancel": "Huỷ"
+  },
+  "menu": {
+    "label": "Tuỳ chọn máy chủ",
+    "disconnect": "Ngắt kết nối {{name}}",
+    "connectedAs": "Đang đăng nhập với {{username}}"
+  },
+  "status": {
+    "unreachable": "Không kết nối được"
+  }
+}
