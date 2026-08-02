@@ -1,0 +1,113 @@
+{
+  "appName": "Open Rocket.Chat",
+  "action": {
+    "cancel": "Huỷ",
+    "save": "Lưu",
+    "close": "Đóng",
+    "retry": "Thử lại",
+    "reload": "Tải lại",
+    "remove": "Xoá",
+    "add": "Thêm",
+    "search": "Tìm kiếm",
+    "more": "Thêm nữa",
+    "create": "Tạo",
+    "edit": "Sửa",
+    "confirm": "Xác nhận",
+    "back": "Quay lại",
+    "loadMore": "Tải thêm"
+  },
+  "avatar": {
+    "upload": "Tải ảnh lên",
+    "remove": "Gỡ ảnh",
+    "hint": "Ảnh vuông là hợp nhất; ảnh luôn được cắt thành hình vuông khi hiển thị.",
+    "error": {
+      "type": "Hãy chọn một tệp ảnh.",
+      "size": "Ảnh này lớn hơn mức máy chủ cho phép ({{size}})."
+    }
+  },
+  "state": {
+    "loading": "Đang tải…",
+    "empty": "Chưa có gì ở đây",
+    "error": "Đã có lỗi xảy ra"
+  },
+  "error": {
+    "network": "Không kết nối được tới máy chủ. Kiểm tra kết nối mạng rồi thử lại.",
+    "unknown": "Đã có lỗi xảy ra. Vui lòng thử lại.",
+    "code": {
+      "bad_request": "Máy chủ Rocket.Chat đã từ chối yêu cầu này.",
+      "unauthorized": "Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại để tiếp tục.",
+      "forbidden": "Bạn không có quyền thực hiện thao tác này.",
+      "not_found": "Nội dung này không còn tồn tại, hoặc bạn không được phép xem.",
+      "conflict": "Thao tác này trùng với một nội dung đã có.",
+      "payload_too_large": "Dung lượng vượt quá giới hạn của máy chủ Rocket.Chat.",
+      "rate_limited": "Bạn thao tác quá nhanh. Chờ một lát rồi thử lại.",
+      "totp_required": "Cần mã xác thực hai lớp.",
+      "upstream_unavailable": "Máy chủ Rocket.Chat không phản hồi.",
+      "upstream_error": "Máy chủ Rocket.Chat trả về lỗi.",
+      "unsupported_by_server": "Máy chủ Rocket.Chat này không hỗ trợ thao tác đó.",
+      "internal_error": "Đã có lỗi xảy ra. Vui lòng thử lại."
+    },
+    "upstream": {
+      "notAllowed": "Máy chủ Rocket.Chat đã từ chối: chức năng này đang bị tắt trên máy chủ hoặc tài khoản của bạn không được phép.",
+      "duplicateName": "Đã có phòng trùng tên.",
+      "fileTooLarge": "Tệp vượt quá dung lượng máy chủ Rocket.Chat cho phép.",
+      "messageTooLong": "Tin nhắn dài hơn mức máy chủ Rocket.Chat cho phép.",
+      "roomGone": "Phòng này không còn tồn tại.",
+      "messageGone": "Tin nhắn này không còn tồn tại.",
+      "notSubscribed": "Bạn không còn là thành viên của phòng này.",
+      "lastOwner": "Bạn là chủ sở hữu cuối cùng của phòng này. Hãy chỉ định chủ sở hữu mới trước khi rời phòng.",
+      "lastOwnerRole": "Đây là chủ sở hữu cuối cùng của phòng. Hãy chỉ định chủ sở hữu mới trước khi gỡ quyền của người này.",
+      "notInRoom": "Người này không ở trong phòng.",
+      "alreadyInRoom": "Người này đã ở trong phòng.",
+      "roomArchived": "Phòng này đã được lưu trữ nên không thể thay đổi.",
+      "invalidRoomName": "Máy chủ Rocket.Chat không chấp nhận tên phòng này.",
+      "archivedDuplicateName": "Đã có một phòng lưu trữ dùng tên này.",
+      "editingBlocked": "Đã quá thời hạn cho phép sửa tin nhắn này.",
+      "appPrevented": "Một ứng dụng cài trên máy chủ Rocket.Chat đã chặn thao tác này.",
+      "invalidFileType": "Máy chủ Rocket.Chat không chấp nhận loại tệp này.",
+      "muted": "Bạn đang bị cấm gửi tin nhắn trong phòng này.",
+      "readOnly": "Phòng này chỉ cho phép đọc.",
+      "roomBlocked": "Cuộc trò chuyện này đang bị chặn."
+    }
+  },
+  "connection": {
+    "connected": "Đã kết nối",
+    "connecting": "Đang kết nối…",
+    "reconnecting": "Đang kết nối lại…",
+    "offline": "Ngoại tuyến",
+    "degraded": "Mất kết nối. Đang kết nối lại…",
+    "banner": {
+      "lost": "Mất kết nối",
+      "offline": "Bạn đang ngoại tuyến",
+      "offlineHint": "Hãy kiểm tra kết nối mạng của bạn.",
+      "hint": "Tin nhắn mới sẽ không đến cho tới khi kết nối trở lại.",
+      "retryIn": "Sẽ thử lại sau {{count}} giây."
+    }
+  },
+  "presence": {
+    "online": "Trực tuyến",
+    "away": "Vắng mặt",
+    "busy": "Bận",
+    "offline": "Ngoại tuyến"
+  },
+  "fileSize": {
+    "bytes": "{{count}} B",
+    "kilobytes": "{{count}} KB",
+    "megabytes": "{{count}} MB"
+  },
+  "unavailable": {
+    "title": "Máy chủ đã tắt chức năng này",
+    "permissionHint": "Chức năng này phụ thuộc vào quyền của tài khoản Rocket.Chat của bạn. Quản trị viên máy chủ có thể cấp thêm quyền.",
+    "settingHint": "Đây là một thiết lập của máy chủ Rocket.Chat. Quản trị viên máy chủ có thể bật lên.",
+    "reason": {
+      "createRoom": "Máy chủ này không cho phép tài khoản của bạn tạo kênh, kênh riêng tư hay tin nhắn trực tiếp.",
+      "createChannel": "Máy chủ này không cho phép tài khoản của bạn tạo kênh công khai.",
+      "createPrivate": "Máy chủ này không cho phép tài khoản của bạn tạo kênh riêng tư.",
+      "createDirect": "Máy chủ này không cho phép tài khoản của bạn bắt đầu tin nhắn trực tiếp mới. Các cuộc trò chuyện bạn đang tham gia vẫn mở bình thường.",
+      "setReadOnly": "Máy chủ này không cho phép tài khoản của bạn đặt phòng ở chế độ chỉ đọc.",
+      "encryption": "Mã hoá đầu cuối đã bị tắt trên toàn bộ máy chủ này, nên không phòng nào có thể mã hoá.",
+      "changeRoomType": "Máy chủ này không cho phép tài khoản của bạn chuyển phòng giữa công khai và riêng tư.",
+      "changeAvatar": "Máy chủ này không cho tài khoản của bạn đổi ảnh đại diện. Ảnh thường do hệ thống đăng nhập của tổ chức bạn quản lý."
+    }
+  }
+}

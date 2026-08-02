@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Open Rocket.Chat">
+  <title>Open Rocket.Chat</title>
+  <rect width="512" height="512" rx="0" fill="#c2762b"/>
+  <g transform="translate(256 256) scale(0.8) translate(-256 -256)"><path d="M168.1 355.0 L90.9 357.0 L119.1 285.1 Z" fill="#ffffff" stroke="#ffffff" stroke-width="12" stroke-linejoin="round"/><circle cx="258" cy="240" r="136" fill="none" stroke="#ffffff" stroke-width="34"/><circle cx="196" cy="240" r="17.5" fill="#ffffff"/><circle cx="258" cy="240" r="17.5" fill="#ffffff"/><circle cx="320" cy="240" r="17.5" fill="#ffffff"/></g>
+</svg>

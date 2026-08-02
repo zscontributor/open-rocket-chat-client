@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="An independent, community-driven client for Rocket.Chat-compatible servers" />
+
+    <!--
+      `favicon.svg` carries both colour variants behind a `prefers-color-scheme`
+      query, so browsers that support SVG favicons switch with the OS theme. The
+      `.ico` is the fallback for those that do not, and always uses the amber
+      tile — it reads against light and dark browser chrome alike.
+    -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Matches `--orc-surface-app` in each scheme, so the mobile browser chrome
+         blends into the app rather than framing it. -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1c1815" />
+
+    <title>Open Rocket.Chat</title>
+  </head>
+  <body class="h-full">
+    <div id="root" class="h-full"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

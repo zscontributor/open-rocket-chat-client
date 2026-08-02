@@ -1,0 +1,30 @@
+# Ignore rules for `web.Dockerfile`.
+#
+# That build takes the PARENT of this repository as its context, so the
+# repository's own `.dockerignore` — which Docker looks for at the context root
+# — never applies. BuildKit reads `<dockerfile>.dockerignore` in preference, so
+# these paths are relative to the parent directory and cover both checkouts.
+#
+# Without this the context is well over a gigabyte of `node_modules` that the
+# image reinstalls anyway.
+
+**/node_modules
+**/dist
+**/build
+**/.turbo
+**/coverage
+**/storybook-static
+**/playwright-report
+**/test-results
+**/blob-report
+**/.git
+**/.github
+**/.vscode
+**/.idea
+**/*.log
+**/.DS_Store
+
+# Secrets never belong in an image layer. `.env.example` is kept.
+**/.env
+**/.env.*
+!**/.env.example

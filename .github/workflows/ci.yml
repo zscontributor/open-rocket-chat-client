@@ -1,0 +1,255 @@
+name: CI
+
+on:
+  push:
+    # `develop` is where day-to-day work lands, so it is the branch whose health
+    # actually matters between releases; `main` and the branches that feed it
+    # are verified again on the way in.
+    branches: [main, develop, 'release/**', 'hotfix/**']
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  verify:
+    name: Format, lint, typecheck, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: open-rocket-chat-client
+
+      # The shared API contract lives in the gateway repository and is resolved
+      # through a pnpm `link:` override, so it has to be checked out as a
+      # sibling and built before this app can compile.
+      #
+      # The default token cannot read another repository. That is fine while
+      # the gateway is public; if it is private, add a PAT with `repo` scope as
+      # the CONTRACT_REPO_TOKEN secret and this keeps working either way.
+      - uses: actions/checkout@v4
+        with:
+          repository: zscontributor/open-rocket-chat-gateway
+          path: open-rocket-chat-gateway
+          token: ${{ secrets.CONTRACT_REPO_TOKEN || github.token }}
+
+      # Both repositories are checked out into sub-directories, so there is no
+      # package.json at the workspace root for the action to read the pinned
+      # pnpm version from. Point it at this repository's.
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: open-rocket-chat-client/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: open-rocket-chat-client/pnpm-lock.yaml
+
+      - name: Build the shared contract
+        working-directory: open-rocket-chat-gateway
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter @open-rocket-chat/api-contract build
+
+      - name: Install
+        working-directory: open-rocket-chat-client
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        working-directory: open-rocket-chat-client
+        run: pnpm run format:check
+
+      - name: Lint
+        working-directory: open-rocket-chat-client
+        run: pnpm run lint
+
+      - name: Typecheck
+        working-directory: open-rocket-chat-client
+        run: pnpm run typecheck
+
+      - name: Build
+        working-directory: open-rocket-chat-client
+        run: pnpm run build
+
+      # Storybook is how theme and translation contributors check their work
+      # without running the whole stack, so a broken build blocks them.
+      - name: Build Storybook
+        working-directory: open-rocket-chat-client
+        run: pnpm --filter @open-rocket-chat/web build-storybook --quiet
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: open-rocket-chat-client/apps/web/dist
+          retention-days: 7
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: storybook
+          path: open-rocket-chat-client/apps/web/storybook-static
+          retention-days: 7
+
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: open-rocket-chat-client
+
+      - uses: actions/checkout@v4
+        with:
+          repository: zscontributor/open-rocket-chat-gateway
+          path: open-rocket-chat-gateway
+          token: ${{ secrets.CONTRACT_REPO_TOKEN || github.token }}
+
+      # Both repositories are checked out into sub-directories, so there is no
+      # package.json at the workspace root for the action to read the pinned
+      # pnpm version from. Point it at this repository's.
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: open-rocket-chat-client/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: open-rocket-chat-client/pnpm-lock.yaml
+
+      - name: Build the shared contract
+        working-directory: open-rocket-chat-gateway
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm --filter @open-rocket-chat/api-contract build
+
+      - name: Install
+        working-directory: open-rocket-chat-client
+        run: pnpm install --frozen-lockfile
+
+      # Covers the theme contract and the locale parity checks, which are what
+      # keep a community theme or translation from breaking the app.
+      - name: Test
+        working-directory: open-rocket-chat-client
+        run: pnpm run test
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      # Fails the build on high and critical advisories only. Lower severities
+      # are reported for triage but should not block an unrelated bug fix.
+      - name: Audit production dependencies
+        run: pnpm audit --prod --audit-level high
+
+      - name: Report all advisories
+        if: always()
+        run: pnpm audit || true
+
+  e2e:
+    name: Browser tests against the full stack
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: open-rocket-chat-client
+
+      - uses: actions/checkout@v4
+        with:
+          repository: zscontributor/open-rocket-chat-gateway
+          path: open-rocket-chat-gateway
+          token: ${{ secrets.CONTRACT_REPO_TOKEN || github.token }}
+
+      # Both repositories are checked out into sub-directories, so there is no
+      # package.json at the workspace root for the action to read the pinned
+      # pnpm version from. Point it at this repository's.
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: open-rocket-chat-client/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+          cache-dependency-path: open-rocket-chat-client/pnpm-lock.yaml
+
+      - name: Start Rocket.Chat
+        working-directory: open-rocket-chat-gateway
+        run: docker compose -f docker/rocketchat.compose.yml up -d
+
+      - name: Build and start the gateway
+        working-directory: open-rocket-chat-gateway
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm run build
+          ROCKETCHAT_SERVERS=http://localhost:3000 \
+          SESSION_SECRET=ci-session-secret-that-is-long-enough-0000 \
+          CORS_ORIGINS=http://localhost:5173 \
+          PORT=4000 \
+          node apps/gateway/dist/main.js &
+
+      - name: Install
+        working-directory: open-rocket-chat-client
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        working-directory: open-rocket-chat-client
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Wait for Rocket.Chat and the gateway
+        run: |
+          for i in $(seq 1 90); do
+            if curl -fsS http://localhost:3000/api/info > /dev/null \
+               && curl -fsS http://localhost:4000/api/v1/health > /dev/null; then
+              echo "stack is up"; exit 0
+            fi
+            sleep 5
+          done
+          echo "stack did not become ready"; exit 1
+
+      - name: Start the web app
+        working-directory: open-rocket-chat-client
+        run: |
+          pnpm --filter @open-rocket-chat/web dev &
+          for i in $(seq 1 30); do
+            curl -fsS http://localhost:5173/ > /dev/null && exit 0
+            sleep 2
+          done
+          echo "dev server did not start"; exit 1
+
+      - name: Run Playwright
+        working-directory: open-rocket-chat-client
+        run: pnpm run test:e2e
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-results
+          path: |
+            open-rocket-chat-client/test-results
+            open-rocket-chat-client/playwright-report
+          retention-days: 7
+
+      - name: Gateway and Rocket.Chat logs
+        if: failure()
+        working-directory: open-rocket-chat-gateway
+        run: docker compose -f docker/rocketchat.compose.yml logs --tail 200

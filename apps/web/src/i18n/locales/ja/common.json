@@ -1,0 +1,114 @@
+{
+  "appName": "Open Rocket.Chat",
+  "action": {
+    "cancel": "キャンセル",
+    "save": "保存",
+    "close": "閉じる",
+    "retry": "再試行",
+    "reload": "再読み込み",
+    "remove": "削除",
+    "add": "追加",
+    "search": "検索",
+    "more": "その他",
+    "create": "作成",
+    "edit": "編集",
+    "confirm": "確認",
+    "back": "戻る",
+    "loadMore": "さらに読み込む"
+  },
+  "avatar": {
+    "upload": "画像をアップロード",
+    "remove": "画像を削除",
+    "hint": "正方形の画像が最適です。表示時は常に正方形に切り抜かれます。",
+    "error": {
+      "type": "画像ファイルを選んでください。",
+      "size": "この画像はサーバーの上限（{{size}}）を超えています。"
+    }
+  },
+  "state": {
+    "loading": "読み込み中…",
+    "empty": "まだ何もありません",
+    "error": "問題が発生しました"
+  },
+  "error": {
+    "network": "サーバーに接続できません。接続を確認して、もう一度お試しください。",
+    "unknown": "問題が発生しました。もう一度お試しください。",
+    "code": {
+      "bad_request": "Rocket.Chat サーバーがリクエストを拒否しました。",
+      "unauthorized": "セッションの有効期限が切れました。続行するには再度サインインしてください。",
+      "forbidden": "この操作を行う権限がありません。",
+      "not_found": "対象が存在しないか、表示する権限がありません。",
+      "conflict": "すでに存在する項目と競合しています。",
+      "payload_too_large": "Rocket.Chat サーバーで許可されているサイズを超えています。",
+      "rate_limited": "リクエストが多すぎます。しばらく待ってから、もう一度お試しください。",
+      "totp_required": "2要素認証コードが必要です。",
+      "upstream_unavailable": "Rocket.Chat サーバーが応答していません。",
+      "upstream_error": "Rocket.Chat サーバーからエラーが返されました。",
+      "unsupported_by_server": "この Rocket.Chat サーバーはその操作に対応していません。",
+      "internal_error": "問題が発生しました。もう一度お試しください。"
+    },
+    "upstream": {
+      "notAllowed": "Rocket.Chat サーバーが拒否しました。サーバーで無効になっているか、アカウントに許可されていません。",
+      "duplicateName": "同じ名前のルームがすでに存在します。",
+      "fileTooLarge": "ファイルが Rocket.Chat サーバーで許可されているサイズを超えています。",
+      "messageTooLong": "メッセージが Rocket.Chat サーバーで許可されている長さを超えています。",
+      "roomGone": "そのルームは存在しません。",
+      "messageGone": "そのメッセージは存在しません。",
+      "notSubscribed": "このルームのメンバーではなくなりました。",
+      "lastOwner": "あなたはこのルームの最後の所有者です。退出する前に、別のメンバーを所有者にしてください。",
+      "lastOwnerRole": "このメンバーはルームの最後の所有者です。所有者から外す前に、別のメンバーを所有者にしてください。",
+      "notInRoom": "そのユーザーはこのルームに参加していません。",
+      "alreadyInRoom": "そのユーザーはすでにこのルームに参加しています。",
+      "roomArchived": "このルームはアーカイブされているため、変更できません。",
+      "invalidRoomName": "この Rocket.Chat サーバーでは、そのルーム名を使用できません。",
+      "archivedDuplicateName": "アーカイブ済みのルームで同じ名前が使用されています。",
+      "editingBlocked": "このメッセージを編集できる時間が過ぎました。",
+      "appPrevented": "Rocket.Chat サーバーにインストールされたアプリが操作をブロックしました。",
+      "invalidFileType": "この Rocket.Chat サーバーでは、この種類のファイルを受け付けていません。",
+      "muted": "このルームでミュートされています。",
+      "readOnly": "このルームは読み取り専用です。",
+      "roomBlocked": "この会話はブロックされています。"
+    }
+  },
+  "connection": {
+    "connected": "接続済み",
+    "connecting": "接続中…",
+    "reconnecting": "再接続中…",
+    "offline": "オフライン",
+    "degraded": "接続が切れました。再接続しています…",
+    "banner": {
+      "lost": "接続が切れました",
+      "offline": "オフラインです",
+      "offlineHint": "ネットワーク接続を確認してください。",
+      "hint": "再接続されるまで新しいメッセージは届きません。",
+      "retryIn_one": "{{count}}秒後に再試行します。",
+      "retryIn_other": "{{count}}秒後に再試行します。"
+    }
+  },
+  "presence": {
+    "online": "オンライン",
+    "away": "離席中",
+    "busy": "取り込み中",
+    "offline": "オフライン"
+  },
+  "fileSize": {
+    "bytes": "{{count}} B",
+    "kilobytes": "{{count}} KB",
+    "megabytes": "{{count}} MB"
+  },
+  "unavailable": {
+    "title": "このサーバーでは無効です",
+    "permissionHint": "Rocket.Chat アカウントの権限によって制御されています。サーバー管理者が権限を付与できます。",
+    "settingHint": "Rocket.Chat サーバーの設定です。サーバー管理者が有効にできます。",
+    "reason": {
+      "createRoom": "このサーバーでは、あなたのアカウントによるチャンネル、非公開チャンネル、ダイレクトメッセージの作成が許可されていません。",
+      "createChannel": "このサーバーでは、あなたのアカウントによる公開チャンネルの作成が許可されていません。",
+      "createPrivate": "このサーバーでは、あなたのアカウントによる非公開チャンネルの作成が許可されていません。",
+      "createDirect": "このサーバーでは、あなたのアカウントによる新しいダイレクトメッセージの開始が許可されていません。既存の会話は引き続き利用できます。",
+      "setReadOnly": "このサーバーでは、あなたのアカウントによるルームの読み取り専用設定が許可されていません。",
+      "encryption": "このサーバー全体でエンドツーエンド暗号化が無効になっているため、ルームを暗号化できません。",
+      "changeRoomType": "このサーバーでは、あなたのアカウントによるルームの公開・非公開の切り替えが許可されていません。",
+      "changeAvatar": "このサーバーではアカウントの画像を変更できません。通常は組織のサインイン基盤側で管理されています。"
+    }
+  }
+}

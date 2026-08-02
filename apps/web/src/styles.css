@@ -1,0 +1,253 @@
+@import 'tailwindcss';
+
+/*
+ * `dark:` follows the app's own scheme, not the OS.
+ *
+ * Tailwind's default is a `prefers-color-scheme` query, which is wrong here:
+ * the colour scheme is a user setting that may deliberately disagree with the
+ * OS, and `applyThemeVariant` already records which one won on
+ * <html data-color-scheme>. Reading the attribute keeps `dark:` utilities in
+ * step with the `--orc-*` tokens instead of drifting out of them.
+ *
+ * Before the first `applyTheme` the attribute is absent, so `dark:` does not
+ * match and the light `@theme` fallbacks below are what paints — consistent.
+ */
+@custom-variant dark (&:where([data-color-scheme='dark'], [data-color-scheme='dark'] *));
+
+/*
+ * Every colour, radius and shadow comes from the active theme, which writes
+ * `--orc-*` custom properties onto <html> at runtime. Mapping them here means
+ * switching themes is one pass of `setProperty` — no stylesheet swap, no
+ * re-render, and no chance of a component hard-coding a colour that a
+ * community theme cannot override.
+ *
+ * The fallbacks keep the app readable during the first paint, before the theme
+ * has been applied.
+ */
+@theme {
+  --color-app: var(--orc-surface-app, #ffffff);
+  --color-sidebar: var(--orc-surface-sidebar, #fbf9f7);
+  --color-panel: var(--orc-surface-panel, #ffffff);
+  --color-raised: var(--orc-surface-raised, #f6f3ef);
+  --color-sunken: var(--orc-surface-sunken, #f1ede8);
+  --color-overlay: var(--orc-surface-overlay, rgb(28 22 16 / 0.55));
+  --color-selected: var(--orc-surface-selected, #b4691f);
+  --color-highlight: var(--orc-surface-highlight, #fbf6ef);
+
+  --color-content: var(--orc-content-primary, #221d18);
+  --color-content-secondary: var(--orc-content-secondary, #4a423b);
+  --color-content-muted: var(--orc-content-muted, #8a8078);
+  --color-content-inverted: var(--orc-content-inverted, #ffffff);
+  --color-link: var(--orc-content-link, #b4691f);
+
+  --color-line: var(--orc-border-subtle, #ece6df);
+  --color-line-strong: var(--orc-border-strong, #dcd3c9);
+  --color-focus: var(--orc-border-focus, #c2762b);
+
+  --color-accent: var(--orc-accent-base, #c2762b);
+  --color-accent-hover: var(--orc-accent-hover, #a9651f);
+  --color-accent-content: var(--orc-accent-content, #ffffff);
+  --color-accent-subtle: var(--orc-accent-subtle, #f7ead9);
+
+  --color-online: var(--orc-status-online, #22a06b);
+  --color-away: var(--orc-status-away, #e5a00d);
+  --color-busy: var(--orc-status-busy, #e5493a);
+  --color-offline: var(--orc-status-offline, #a8a29a);
+  --color-danger: var(--orc-status-danger, #d64545);
+  --color-warning: var(--orc-status-warning, #e5a00d);
+  --color-success: var(--orc-status-success, #22a06b);
+  --color-info: var(--orc-status-info, #3b82f6);
+
+  --radius-sm: var(--orc-radius-sm, 6px);
+  --radius-md: var(--orc-radius-md, 10px);
+  --radius-lg: var(--orc-radius-lg, 14px);
+  --radius-xl: var(--orc-radius-xl, 20px);
+
+  --shadow-sm: var(--orc-shadow-sm, 0 1px 2px rgb(28 22 16 / 0.06));
+  --shadow-md: var(--orc-shadow-md, 0 4px 12px rgb(28 22 16 / 0.08));
+  --shadow-lg: var(--orc-shadow-lg, 0 16px 40px rgb(28 22 16 / 0.16));
+
+  --font-sans: var(--orc-font-sans, ui-sans-serif, system-ui, sans-serif);
+  --font-mono: var(--orc-font-mono, ui-monospace, monospace);
+}
+
+/*
+ * A toast arriving with no motion at all reads as a rendering glitch; sliding
+ * it in from the edge it is anchored to says where it came from. Applied under
+ * `motion-safe:`, so it is skipped entirely for reduced-motion users.
+ */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toast-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-app text-content font-sans antialiased;
+  }
+
+  /* Visible focus everywhere, including keyboard-only navigation. */
+  :focus-visible {
+    @apply outline-focus outline-2 outline-offset-2;
+  }
+
+  /* Themes set `color-scheme`, but selection colour is not derived from it. */
+  ::selection {
+    @apply bg-accent/25;
+  }
+}
+
+/*
+ * Syntax colours for the code blocks `rehype-highlight` marks up.
+ *
+ * Not part of the theme contract, and deliberately: that contract is validated,
+ * every token in it is required, and adding eight more would invalidate every
+ * theme already written against it — including community ones. A palette is
+ * defined here per colour scheme instead, and a theme that wants its own can
+ * still set the `--orc-syntax-*` properties from its own stylesheet.
+ *
+ * The two sets are GitHub's, which is what Rocket.Chat renders code with; they
+ * are picked for contrast against a light and a dark panel respectively, and
+ * both are read against `surface.sunken`, the code block's own background.
+ */
+:root {
+  --orc-syntax-comment: #6e7781;
+  --orc-syntax-keyword: #cf222e;
+  --orc-syntax-string: #0a3069;
+  --orc-syntax-value: #0550ae;
+  --orc-syntax-title: #8250df;
+  --orc-syntax-attr: #953800;
+  --orc-syntax-added: #116329;
+  --orc-syntax-removed: #82071e;
+}
+
+[data-color-scheme='dark'] {
+  --orc-syntax-comment: #8b949e;
+  --orc-syntax-keyword: #ff7b72;
+  --orc-syntax-string: #a5d6ff;
+  --orc-syntax-value: #79c0ff;
+  --orc-syntax-title: #d2a8ff;
+  --orc-syntax-attr: #ffa657;
+  --orc-syntax-added: #7ee787;
+  --orc-syntax-removed: #ffa198;
+}
+
+@layer base {
+  /* Comments and prose inside code carry no syntax of their own. */
+  .hljs-comment,
+  .hljs-quote {
+    color: var(--orc-syntax-comment);
+    font-style: italic;
+  }
+
+  /* The words of the language itself, and the tags of a markup one. */
+  .hljs-keyword,
+  .hljs-selector-tag,
+  .hljs-literal,
+  .hljs-section,
+  .hljs-doctag,
+  .hljs-name,
+  .hljs-tag,
+  .hljs-meta .hljs-keyword {
+    color: var(--orc-syntax-keyword);
+  }
+
+  .hljs-string,
+  .hljs-regexp,
+  .hljs-char.escape_,
+  .hljs-meta .hljs-string {
+    color: var(--orc-syntax-string);
+  }
+
+  /* Everything that stands for a value: numbers, symbols, links, variables. */
+  .hljs-number,
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-link,
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-selector-attr,
+  .hljs-selector-pseudo,
+  .hljs-operator {
+    color: var(--orc-syntax-value);
+  }
+
+  /* What the author named: functions, classes, and the built-ins they call. */
+  .hljs-title,
+  .hljs-title.class_,
+  .hljs-title.function_,
+  .hljs-built_in,
+  .hljs-type,
+  .hljs-class .hljs-title {
+    color: var(--orc-syntax-title);
+  }
+
+  .hljs-attr,
+  .hljs-attribute,
+  .hljs-property,
+  .hljs-params,
+  .hljs-selector-class,
+  .hljs-selector-id,
+  .hljs-meta {
+    color: var(--orc-syntax-attr);
+  }
+
+  /* A diff reads by its signs, so those keep a tint of their own. */
+  .hljs-addition {
+    color: var(--orc-syntax-added);
+  }
+
+  .hljs-deletion {
+    color: var(--orc-syntax-removed);
+  }
+
+  .hljs-emphasis {
+    font-style: italic;
+  }
+
+  .hljs-strong {
+    font-weight: 600;
+  }
+}
+
+@layer utilities {
+  /*
+   * Message lists are scrolled far more than they are read at rest, so the
+   * scrollbar stays quiet until it is needed.
+   */
+  .scrollbar-slim {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+
+  .scrollbar-slim::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-slim::-webkit-scrollbar-thumb {
+    background-color: var(--color-line-strong);
+    border-radius: 9999px;
+  }
+
+  .scrollbar-slim::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}

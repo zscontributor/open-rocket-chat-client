@@ -1,0 +1,114 @@
+{
+  "appName": "Open Rocket.Chat",
+  "action": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "retry": "Retry",
+    "reload": "Reload",
+    "remove": "Remove",
+    "add": "Add",
+    "search": "Search",
+    "more": "More",
+    "create": "Create",
+    "edit": "Edit",
+    "confirm": "Confirm",
+    "back": "Back",
+    "loadMore": "Load more"
+  },
+  "avatar": {
+    "upload": "Upload a picture",
+    "remove": "Remove picture",
+    "hint": "A square image works best; it is cropped to a square everywhere it is shown.",
+    "error": {
+      "type": "Choose an image file.",
+      "size": "That image is larger than this server allows ({{size}})."
+    }
+  },
+  "state": {
+    "loading": "Loading…",
+    "empty": "Nothing here yet",
+    "error": "Something went wrong"
+  },
+  "error": {
+    "network": "Cannot reach the server. Check your connection and try again.",
+    "unknown": "Something went wrong. Please try again.",
+    "code": {
+      "bad_request": "The Rocket.Chat server rejected that request.",
+      "unauthorized": "Your session has expired. Sign in again to continue.",
+      "forbidden": "You do not have permission to do that.",
+      "not_found": "That no longer exists, or is not visible to you.",
+      "conflict": "That conflicts with something that already exists.",
+      "payload_too_large": "That is larger than the Rocket.Chat server allows.",
+      "rate_limited": "Too many requests. Wait a moment and try again.",
+      "totp_required": "A two-factor authentication code is required.",
+      "upstream_unavailable": "The Rocket.Chat server is not responding.",
+      "upstream_error": "The Rocket.Chat server returned an error.",
+      "unsupported_by_server": "This Rocket.Chat server does not support that.",
+      "internal_error": "Something went wrong. Please try again."
+    },
+    "upstream": {
+      "notAllowed": "The Rocket.Chat server refused that: it is either turned off on the server or not permitted for your account.",
+      "duplicateName": "A room with that name already exists.",
+      "fileTooLarge": "That file is larger than the Rocket.Chat server allows.",
+      "messageTooLong": "That message is longer than the Rocket.Chat server allows.",
+      "roomGone": "That room no longer exists.",
+      "messageGone": "That message no longer exists.",
+      "notSubscribed": "You are no longer a member of that room.",
+      "lastOwner": "You are the last owner of this room. Make someone else an owner before you leave.",
+      "lastOwnerRole": "This is the last owner of the room. Make someone else an owner before removing this one.",
+      "notInRoom": "That person is not in this room.",
+      "alreadyInRoom": "That person is already in this room.",
+      "roomArchived": "This room is archived, so it cannot be changed.",
+      "invalidRoomName": "That room name is not allowed on this Rocket.Chat server.",
+      "archivedDuplicateName": "An archived room already uses that name.",
+      "editingBlocked": "The time allowed for editing this message has passed.",
+      "appPrevented": "An app installed on the Rocket.Chat server blocked that.",
+      "invalidFileType": "This Rocket.Chat server does not accept that kind of file.",
+      "muted": "You have been muted in this room.",
+      "readOnly": "This room is read-only.",
+      "roomBlocked": "This conversation is blocked."
+    }
+  },
+  "connection": {
+    "connected": "Connected",
+    "connecting": "Connecting…",
+    "reconnecting": "Reconnecting…",
+    "offline": "Offline",
+    "degraded": "Connection lost. Reconnecting…",
+    "banner": {
+      "lost": "Connection lost",
+      "offline": "You are offline",
+      "offlineHint": "Check your network connection.",
+      "hint": "New messages will not arrive until this is back.",
+      "retryIn_one": "Trying again in {{count}} second.",
+      "retryIn_other": "Trying again in {{count}} seconds."
+    }
+  },
+  "presence": {
+    "online": "Online",
+    "away": "Away",
+    "busy": "Busy",
+    "offline": "Offline"
+  },
+  "fileSize": {
+    "bytes": "{{count}} B",
+    "kilobytes": "{{count}} KB",
+    "megabytes": "{{count}} MB"
+  },
+  "unavailable": {
+    "title": "Turned off on this server",
+    "permissionHint": "This is controlled by your Rocket.Chat account's permissions. A server administrator can grant it.",
+    "settingHint": "This is a Rocket.Chat server setting. A server administrator can turn it on.",
+    "reason": {
+      "createRoom": "This server does not let your account create channels, private channels or direct messages.",
+      "createChannel": "This server does not let your account create public channels.",
+      "createPrivate": "This server does not let your account create private channels.",
+      "createDirect": "This server does not let your account start new direct messages. Conversations you are already in stay open.",
+      "setReadOnly": "This server does not let your account make a room read only.",
+      "encryption": "End-to-end encryption is switched off for this whole server, so no room can be encrypted.",
+      "changeRoomType": "This server does not let your account switch this room between public and private.",
+      "changeAvatar": "This server does not let your account change its own picture. It is usually managed by whatever your organisation signs you in with."
+    }
+  }
+}

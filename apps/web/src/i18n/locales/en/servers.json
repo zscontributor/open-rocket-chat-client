@@ -1,0 +1,24 @@
+{
+  "rail": {
+    "label": "Servers",
+    "add": "Add a server",
+    "switchTo": "Switch to {{name}}"
+  },
+  "add": {
+    "title": "Add a server",
+    "description": "Sign in to another Rocket.Chat server. Both stay connected, and you can switch between them at any time.",
+    "allConnected": "You are already signed in to every server this gateway offers.",
+    "gatewayServer": "You are signing in to \"{{name}}\", declared in ROCKETCHAT_SERVERS in your gateway's .env.",
+    "chooseGatewayServer": "Pick which server to sign in to. These names come from ROCKETCHAT_SERVERS in your gateway's .env.",
+    "serverList": "Servers declared in ROCKETCHAT_SERVERS",
+    "cancel": "Cancel"
+  },
+  "menu": {
+    "label": "Server options",
+    "disconnect": "Disconnect from {{name}}",
+    "connectedAs": "Signed in as {{username}}"
+  },
+  "status": {
+    "unreachable": "Unreachable"
+  }
+}
