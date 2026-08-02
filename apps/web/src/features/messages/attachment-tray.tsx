@@ -40,6 +40,61 @@ const Thumbnail = ({ attachment }: { attachment: PendingAttachment }) => {
 };
 
 /**
+ * What covers a tile while its file is going up.
+ *
+ * Two states, and the difference between them is the honest part. A percentage
+ * while the bytes are still leaving the browser; then, once they have all
+ * gone, a named wait — Rocket.Chat receiving and storing the file, and making
+ * a message of it. That second stretch cannot be measured from here at all,
+ * and on a setup where the gateway is the near thing and Rocket.Chat the
+ * distant one it is most of the wait. Saying so beats a bar frozen at 100%,
+ * which reads as stuck, or a spinner appearing from nowhere, which reads as
+ * the progress having vanished.
+ */
+const UploadOverlay = ({ attachment, labels }: { attachment: PendingAttachment; labels: UploadLabels }) => {
+  const percent = attachment.progress === undefined ? null : Math.round(attachment.progress * 100);
+  const settling = percent === null || percent >= 100;
+
+  return (
+    <span
+      // Darker than the hover scrims elsewhere on the tile: this one has text
+      // on it that has to stay readable over a bright thumbnail.
+      className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/55 px-3 text-white"
+      role="progressbar"
+      aria-label={settling ? labels.processing : labels.uploading}
+      // Omitted while indeterminate, which is how a screen reader is told the
+      // wait has no measure rather than that it has stalled at zero.
+      {...(settling ? {} : { 'aria-valuenow': percent, 'aria-valuemin': 0, 'aria-valuemax': 100 })}
+    >
+      {settling ? (
+        <>
+          <Spinner className="size-5" />
+          <span className="text-center text-[11px] leading-tight">{labels.processingShort}</span>
+        </>
+      ) : (
+        <>
+          <span className="text-sm font-semibold tabular-nums">{percent}%</span>
+          <span className="h-1 w-full overflow-hidden rounded-full bg-white/30">
+            <span
+              className="block h-full rounded-full bg-white transition-[width] duration-150"
+              style={{ width: `${percent}%` }}
+            />
+          </span>
+          <span className="text-center text-[11px] leading-tight">{labels.sendingShort}</span>
+        </>
+      )}
+    </span>
+  );
+};
+
+interface UploadLabels {
+  uploading: string;
+  processing: string;
+  sendingShort: string;
+  processingShort: string;
+}
+
+/**
  * Files staged in the composer, before anything is sent.
  *
  * Previewing here — rather than after the upload — is what lets someone notice
@@ -113,9 +168,15 @@ export const AttachmentTray = ({
                 )}
 
                 {attachment.status === 'uploading' ? (
-                  <span className="absolute inset-0 flex items-center justify-center bg-black/40 text-white">
-                    <Spinner className="size-5" />
-                  </span>
+                  <UploadOverlay
+                    attachment={attachment}
+                    labels={{
+                      uploading: t('attachments.uploading', { name: attachment.name }),
+                      processing: t('attachments.processing'),
+                      sendingShort: t('attachments.sendingShort'),
+                      processingShort: t('attachments.processingShort'),
+                    }}
+                  />
                 ) : null}
 
                 <button

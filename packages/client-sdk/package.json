@@ -1,6 +1,6 @@
 {
   "name": "@open-rocket-chat/client-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Browser SDK for the Open Rocket.Chat gateway: typed HTTP calls and a reconnecting realtime channel",
   "license": "MIT",
   "repository": {
