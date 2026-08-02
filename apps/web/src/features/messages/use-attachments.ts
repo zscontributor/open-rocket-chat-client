@@ -21,6 +21,16 @@ export interface PendingAttachment {
   status: AttachmentStatus;
   error?: string;
   caption: string;
+  /**
+   * How far the bytes have got, 0 to 1, while `status` is `uploading`.
+   *
+   * Absent until the first report arrives, which is what tells the tile to
+   * show an indeterminate spinner rather than a bar sitting at zero. It is
+   * also deliberately never set to 1 by the transport: reaching the gateway is
+   * not the same as the message existing, and the wait that follows — the
+   * gateway forwarding to Rocket.Chat — belongs to the spinner again.
+   */
+  progress?: number;
 }
 
 let sequence = 0;
@@ -99,6 +109,8 @@ export interface UseAttachmentsResult {
   clear: () => void;
   setCaption: (id: string, caption: string) => void;
   setStatus: (id: string, status: AttachmentStatus, error?: string) => void;
+  /** Records how far one file's bytes have got, as a fraction of its size. */
+  setProgress: (id: string, loaded: number, total: number) => void;
   /**
    * Marks an attachment as uploading and hands back the signal its request
    * must run under, or `null` when it was removed before its turn came.
@@ -218,19 +230,39 @@ export const useAttachments = (): UseAttachmentsResult => {
     );
   }, []);
 
-  const beginUpload = useCallback(
-    (id: string): AbortSignal | null => {
-      // Taken back out of the tray while an earlier file was still going up.
-      if (!stagedIds.current.has(id)) return null;
+  const setProgress = useCallback((id: string, loaded: number, total: number) => {
+    // A body of unknown length reports `total: 0`; there is no fraction to
+    // draw from that, so the tile stays on its spinner.
+    if (total <= 0) return;
 
-      const controller = new AbortController();
-      uploads.current.set(id, controller);
-      setStatus(id, 'uploading');
+    // Rounded to whole percent before it reaches state: a large file fires
+    // hundreds of these, and re-rendering the tray for a change nobody can see
+    // is the one way a progress bar makes an upload slower.
+    const value = Math.min(1, Math.round((loaded / total) * 100) / 100);
 
-      return controller.signal;
-    },
-    [setStatus],
-  );
+    setAttachments((current) =>
+      current.some((item) => item.id === id && item.progress !== value)
+        ? current.map((item) => (item.id === id ? { ...item, progress: value } : item))
+        : current,
+    );
+  }, []);
+
+  const beginUpload = useCallback((id: string): AbortSignal | null => {
+    // Taken back out of the tray while an earlier file was still going up.
+    if (!stagedIds.current.has(id)) return null;
+
+    const controller = new AbortController();
+    uploads.current.set(id, controller);
+
+    // Progress is cleared alongside the status change, so a second attempt
+    // after a failure starts from the spinner rather than from wherever the
+    // first one stopped.
+    setAttachments((current) =>
+      current.map((item) => (item.id === id ? { ...item, status: 'uploading' as const, progress: undefined } : item)),
+    );
+
+    return controller.signal;
+  }, []);
 
   const endUpload = useCallback((id: string) => {
     uploads.current.delete(id);
@@ -257,6 +289,7 @@ export const useAttachments = (): UseAttachmentsResult => {
     clear,
     setCaption,
     setStatus,
+    setProgress,
     beginUpload,
     endUpload,
     mediaItems,
