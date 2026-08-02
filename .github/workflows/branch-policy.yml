@@ -1,0 +1,79 @@
+name: Branch policy
+
+# Branch protection can require a review and green checks, but it cannot say
+# *which* branch a pull request is allowed to come from. That is the one part of
+# the branching model GitHub will not enforce for us, so it is enforced here:
+# `main` only ever receives a release, a hotfix, or develop itself.
+#
+# The rules, and the reasoning behind them, are in CONTRIBUTING.md.
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  policy:
+    name: Branch and title policy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the base branch
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
+        run: |
+          echo "$HEAD -> $BASE"
+
+          case "$BASE" in
+            main)
+              case "$HEAD" in
+                develop|release/*|hotfix/*) ;;
+                *)
+                  echo "::error::'main' is the release branch. It accepts pull requests from 'develop', 'release/*' or 'hotfix/*' only — '$HEAD' is none of those."
+                  echo "::error::Retarget this pull request at 'develop'. GitHub keeps the review and the commits; use 'Edit' next to the title and change the base branch."
+                  exit 1
+                  ;;
+              esac
+              ;;
+            develop) ;;
+            release/*|hotfix/*) ;;
+            *)
+              echo "::error::Pull requests target 'develop', or 'main' for a release or hotfix. '$BASE' is neither."
+              exit 1
+              ;;
+          esac
+
+      # Fork branches are named by people who have never read this repository's
+      # conventions, and rejecting a good patch over its branch name would be a
+      # poor trade. Contributors with push access get held to the convention.
+      - name: Check the branch name
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          HEAD: ${{ github.head_ref }}
+        run: |
+          case "$HEAD" in
+            develop|main) ;;
+            feature/*|fix/*|hotfix/*|release/*|chore/*|docs/*|refactor/*|test/*|perf/*|ci/*|build/*|deps/*) ;;
+            *)
+              echo "::error::Branch '$HEAD' does not follow the naming convention."
+              echo "::error::Use one of: feature/ fix/ hotfix/ release/ chore/ docs/ refactor/ test/ perf/ ci/ build/ deps/ — for example 'feature/thread-search'."
+              exit 1
+              ;;
+          esac
+
+      # Pull requests are squashed into develop, and GitHub uses the pull request
+      # title as the commit subject — so the title is what ends up in the history
+      # and in the changelog, not any of the individual commit messages.
+      - name: Check the title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          PATTERN='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9._-]+\))?!?: .+'
+          if ! printf '%s' "$TITLE" | grep -Eq "$PATTERN"; then
+            echo "::error::Pull request title '$TITLE' is not a Conventional Commit."
+            echo "::error::Expected '<type>(<optional scope>): <description>', for example 'feat(rooms): pin messages from the room header'."
+            echo "::error::Types: feat fix docs style refactor perf test build ci chore revert. Append '!' for a breaking change."
+            exit 1
+          fi

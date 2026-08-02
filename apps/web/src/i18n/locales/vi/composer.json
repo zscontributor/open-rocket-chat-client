@@ -1,0 +1,139 @@
+{
+  "placeholder": "Nhắn tin tới {{room}}",
+  "placeholderThread": "Trả lời trong luồng",
+  "action": {
+    "send": "Gửi tin nhắn",
+    "attachFiles": "Đính kèm tệp",
+    "attachFolder": "Đính kèm thư mục",
+    "formatting": "Định dạng",
+    "emoji": "Biểu tượng cảm xúc",
+    "gif": "Ảnh GIF",
+    "preview": "Xem trước tin nhắn",
+    "hidePreview": "Ẩn xem trước",
+    "saveEdit": "Lưu thay đổi",
+    "moreActions": "Thao tác khác",
+    "voiceMessage": "Ghi âm tin nhắn thoại",
+    "resize": "Đổi chiều cao ô soạn tin — kéo, hoặc nhấp đúp để khôi phục"
+  },
+  "formatting": {
+    "title": "Định dạng",
+    "bold": "In đậm",
+    "italic": "In nghiêng",
+    "underline": "Gạch chân",
+    "strike": "Gạch ngang",
+    "code": "Mã",
+    "codeBlock": "Khối mã"
+  },
+  "preview": {
+    "title": "Xem trước",
+    "empty": "Chưa có nội dung để xem trước."
+  },
+  "editing": {
+    "label": "Đang sửa:",
+    "noText": "(không có nội dung)",
+    "cancel": "Dừng sửa"
+  },
+  "enterToSend": {
+    "label": "Enter để gửi"
+  },
+  "longMessage": {
+    "title": "Tin nhắn quá dài",
+    "detail": "Tin nhắn này dài hơn giới hạn {{limit}} ký tự của máy chủ. Gửi dưới dạng tệp văn bản thay thế?",
+    "confirm": "Gửi dưới dạng tệp"
+  },
+  "hint": {
+    "send": "Enter để gửi, Shift + Enter để xuống dòng",
+    "sendWithModifier": "{{mod}} + Enter để gửi, Enter để xuống dòng",
+    "editing": "Enter để lưu, Esc để huỷ",
+    "editingWithModifier": "{{mod}} + Enter để lưu, Esc để huỷ"
+  },
+  "dropZone": {
+    "title": "Thả tệp vào đây để đính kèm",
+    "hint": "Tệp sẽ được thêm vào khung soạn tin, bạn có thể ghi chú trước khi gửi.",
+    "blocked": {
+      "uploads": "Máy chủ này đã tắt tính năng tải tệp lên.",
+      "readOnly": "Phòng này chỉ cho phép đọc.",
+      "editing": "Hãy hoàn tất chỉnh sửa tin nhắn trước khi đính kèm tệp."
+    }
+  },
+  "attachments": {
+    "heading_one": "{{count}} tệp đính kèm",
+    "heading_other": "{{count}} tệp đính kèm",
+    "remove": "Xoá {{name}}",
+    "removeAll": "Xoá tất cả",
+    "preview": "Xem trước {{name}}",
+    "uploading": "Đang tải lên {{name}}…",
+    "failed": "Tải lên {{name}} thất bại",
+    "tooLarge": "{{name}} vượt quá giới hạn {{limit}}",
+    "captionPlaceholder": "Thêm chú thích",
+    "play": "Phát {{name}}"
+  },
+  "autocomplete": {
+    "label": "Gợi ý",
+    "loading": "Đang tìm…",
+    "searchUsers": "Tìm người",
+    "searchRooms": "Tìm phòng",
+    "noResults": "Không có kết quả cho “{{query}}”",
+    "empty": "Không có gợi ý nào.",
+    "notInRoom": "Không ở trong phòng này",
+    "special": {
+      "all": "Thông báo cho mọi người trong phòng",
+      "here": "Thông báo cho những người đang trực tuyến"
+    }
+  },
+  "error": {
+    "sendFailed": "Không gửi được tin nhắn. {{reason}}",
+    "tooLong": "Tin nhắn này dài hơn giới hạn {{limit}} ký tự của máy chủ.",
+    "editFailed": "Không sửa được tin nhắn. {{reason}}",
+    "commandFailed": "Không chạy được /{{command}}. {{reason}}",
+    "commandDenied": "Bạn không có quyền chạy /{{command}} trong phòng này.",
+    "gifAttachFailed": "Không đính kèm được ảnh GIF, đường dẫn của ảnh đã được thêm vào tin nhắn."
+  },
+  "gifPicker": {
+    "search": "Tìm trên GIPHY",
+    "trending": "Đang thịnh hành",
+    "results": "Kết quả",
+    "noResults": "Không có ảnh GIF nào khớp “{{query}}”",
+    "poweredBy": "Cung cấp bởi GIPHY",
+    "error": {
+      "unavailable": "Không kết nối được tới GIPHY.",
+      "unauthorised": "GIPHY từ chối khoá API. Hãy kiểm tra lại trong Cài đặt."
+    },
+    "needsKey": {
+      "title": "Tìm ảnh GIF cần khoá GIPHY",
+      "hint": "GIPHY cấp khoá miễn phí. Thêm khoá trong Cài đặt là dùng được ngay.",
+      "action": "Mở cài đặt"
+    }
+  },
+  "voice": {
+    "recording": "Đang ghi âm tin nhắn thoại",
+    "starting": "Đang bắt đầu…",
+    "hint": "Dừng để đính kèm bản ghi, hoặc huỷ bỏ.",
+    "remaining": "Còn {{seconds}} giây",
+    "stop": "Dừng và đính kèm",
+    "cancel": "Huỷ bản ghi",
+    "error": {
+      "denied": "Trình duyệt đã chặn quyền dùng micro. Hãy cho phép để ghi âm tin nhắn thoại.",
+      "unsupported": "Trình duyệt này không ghi âm được.",
+      "failed": "Không bắt đầu được việc ghi âm."
+    }
+  },
+  "emojiPicker": {
+    "title": "Biểu tượng cảm xúc",
+    "search": "Tìm biểu tượng",
+    "noResults": "Không có biểu tượng nào khớp “{{query}}”",
+    "custom": "Tuỳ chỉnh",
+    "frequent": "Hay dùng",
+    "group": {
+      "smileys-emotion": "Mặt cười & Cảm xúc",
+      "people-body": "Con người",
+      "animals-nature": "Động vật & Thiên nhiên",
+      "food-drink": "Đồ ăn & Thức uống",
+      "travel-places": "Du lịch & Địa điểm",
+      "activities": "Hoạt động",
+      "objects": "Đồ vật",
+      "symbols": "Ký hiệu",
+      "flags": "Cờ"
+    }
+  }
+}

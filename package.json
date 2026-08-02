@@ -1,0 +1,50 @@
+{
+  "name": "open-rocket-chat-client",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An independent, community-driven frontend for Rocket.Chat-compatible servers",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zscontributor/open-rocket-chat-client.git"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "packageManager": "pnpm@10.28.2",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "eslint .",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,mjs,json,md,css,yml,yaml}\"",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "lint:fix": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.1.2",
+    "eslint": "^10.8.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.8.0",
+    "prettier": "^3.9.6",
+    "turbo": "^2.10.8",
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.65.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ],
+    "overridesComment": "The gateway repo owns the shared contract and Rocket.Chat SDKs. Until they are published to npm, resolve them from a sibling checkout so both repos can be developed together. See CONTRIBUTING.md.",
+    "overrides": {
+      "@open-rocket-chat/api-contract": "link:../open-rocket-chat-gateway/packages/api-contract"
+    }
+  }
+}

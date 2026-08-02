@@ -1,0 +1,22 @@
+{
+  "lightbox": {
+    "title": "メディアビューアー",
+    "close": "ビューアーを閉じる",
+    "previous": "前へ",
+    "next": "次へ",
+    "download": "ダウンロード",
+    "openInNewTab": "新しいタブで開く",
+    "zoomIn": "拡大",
+    "zoomOut": "縮小",
+    "resetZoom": "ズームをリセット",
+    "counter": "{{total}}件中{{current}}件目",
+    "unsupported": "このファイルはプレビューできません。",
+    "loadFailed": "このファイルを読み込めませんでした。"
+  },
+  "type": {
+    "image": "画像",
+    "video": "動画",
+    "audio": "音声",
+    "file": "ファイル"
+  }
+}

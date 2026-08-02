@@ -1,0 +1,139 @@
+{
+  "placeholder": "{{room}} にメッセージを送信",
+  "placeholderThread": "スレッドに返信",
+  "action": {
+    "send": "メッセージを送信",
+    "attachFiles": "ファイルを添付",
+    "attachFolder": "フォルダーを添付",
+    "formatting": "書式設定",
+    "emoji": "絵文字",
+    "gif": "GIF",
+    "preview": "メッセージをプレビュー",
+    "hidePreview": "プレビューを非表示",
+    "saveEdit": "変更を保存",
+    "moreActions": "その他の操作",
+    "voiceMessage": "ボイスメッセージを録音",
+    "resize": "メッセージ欄のサイズ変更 — ドラッグ、またはダブルクリックでリセット"
+  },
+  "formatting": {
+    "title": "書式設定",
+    "bold": "太字",
+    "italic": "斜体",
+    "underline": "下線",
+    "strike": "取り消し線",
+    "code": "コード",
+    "codeBlock": "コードブロック"
+  },
+  "preview": {
+    "title": "プレビュー",
+    "empty": "プレビューする内容はまだありません。"
+  },
+  "editing": {
+    "label": "編集中:",
+    "noText": "（テキストなし）",
+    "cancel": "編集を中止"
+  },
+  "enterToSend": {
+    "label": "Enter で送信"
+  },
+  "longMessage": {
+    "title": "メッセージが長すぎます",
+    "detail": "このメッセージはサーバーが許可する {{limit}} 文字を超えています。代わりにテキストファイルとして送信しますか？",
+    "confirm": "ファイルとして送信"
+  },
+  "hint": {
+    "send": "Enter で送信、Shift + Enter で改行",
+    "sendWithModifier": "{{mod}} + Enter で送信、Enter で改行",
+    "editing": "Enter で保存、Esc でキャンセル",
+    "editingWithModifier": "{{mod}} + Enter で保存、Esc でキャンセル"
+  },
+  "dropZone": {
+    "title": "ファイルをドロップして添付",
+    "hint": "メッセージ欄に追加されるため、送信前にキャプションを付けられます。",
+    "blocked": {
+      "uploads": "このサーバーではファイルのアップロードが無効です。",
+      "readOnly": "このルームは読み取り専用です。",
+      "editing": "ファイルを添付する前にメッセージの編集を完了してください。"
+    }
+  },
+  "attachments": {
+    "heading_one": "添付ファイル {{count}}件",
+    "heading_other": "添付ファイル {{count}}件",
+    "remove": "{{name}} を削除",
+    "removeAll": "すべて削除",
+    "preview": "{{name}} をプレビュー",
+    "uploading": "{{name}} をアップロード中…",
+    "failed": "{{name}} のアップロードに失敗しました",
+    "tooLarge": "{{name}} は上限の {{limit}} を超えています",
+    "captionPlaceholder": "キャプションを追加",
+    "play": "{{name}} を再生"
+  },
+  "autocomplete": {
+    "label": "候補",
+    "loading": "検索中…",
+    "searchUsers": "ユーザーを検索",
+    "searchRooms": "ルームを検索",
+    "noResults": "「{{query}}」に一致するものはありません",
+    "empty": "候補はありません。",
+    "notInRoom": "このルームには未参加",
+    "special": {
+      "all": "このルームの全員に通知",
+      "here": "オンラインの全員に通知"
+    }
+  },
+  "error": {
+    "sendFailed": "メッセージを送信できませんでした。{{reason}}",
+    "tooLong": "このメッセージはサーバーが許可する {{limit}} 文字を超えています。",
+    "editFailed": "メッセージを編集できませんでした。{{reason}}",
+    "commandFailed": "/{{command}} を実行できませんでした。{{reason}}",
+    "commandDenied": "このルームで /{{command}} を実行する権限がありません。",
+    "gifAttachFailed": "GIF を添付できなかったため、代わりにリンクをメッセージへ追加しました。"
+  },
+  "gifPicker": {
+    "search": "GIPHY を検索",
+    "trending": "トレンド",
+    "results": "検索結果",
+    "noResults": "「{{query}}」に一致する GIF はありません",
+    "poweredBy": "Powered by GIPHY",
+    "error": {
+      "unavailable": "GIPHY に接続できませんでした。",
+      "unauthorised": "GIPHY が API キーを拒否しました。設定を確認してください。"
+    },
+    "needsKey": {
+      "title": "GIF の検索には GIPHY キーが必要です",
+      "hint": "GIPHY では無料でキーを取得できます。設定に追加すると検索を利用できます。",
+      "action": "設定を開く"
+    }
+  },
+  "voice": {
+    "recording": "ボイスメッセージを録音中",
+    "starting": "開始中…",
+    "hint": "停止して録音を添付するか、破棄してください。",
+    "remaining": "残り{{seconds}}秒",
+    "stop": "停止して添付",
+    "cancel": "録音を破棄",
+    "error": {
+      "denied": "マイクへのアクセスがブロックされました。ボイスメッセージを録音するには、ブラウザーで許可してください。",
+      "unsupported": "このブラウザーでは音声を録音できません。",
+      "failed": "録音を開始できませんでした。"
+    }
+  },
+  "emojiPicker": {
+    "title": "絵文字",
+    "search": "絵文字を検索",
+    "noResults": "「{{query}}」に一致する絵文字はありません",
+    "custom": "カスタム",
+    "frequent": "よく使う絵文字",
+    "group": {
+      "smileys-emotion": "スマイリーと感情",
+      "people-body": "人と身体",
+      "animals-nature": "動物と自然",
+      "food-drink": "食べ物と飲み物",
+      "travel-places": "旅行と場所",
+      "activities": "アクティビティ",
+      "objects": "物",
+      "symbols": "記号",
+      "flags": "旗"
+    }
+  }
+}

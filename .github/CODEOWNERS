@@ -1,0 +1,7 @@
+# Every pull request needs a review from a maintainer before it can be merged.
+# Branch protection on `main` and `develop` requires a code owner's approval,
+# which is what stops a contributor from merging their own work.
+#
+# See CONTRIBUTING.md — "Branching model".
+
+* @zscontributor
