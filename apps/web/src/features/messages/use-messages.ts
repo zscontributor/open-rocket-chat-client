@@ -1,4 +1,4 @@
-import type { Message } from '@open-rocket-chat/client-sdk';
+import type { Message, UploadProgress } from '@open-rocket-chat/client-sdk';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useClient, useServerKeys } from '@/features/servers/server-scope';
@@ -205,6 +205,8 @@ export interface UploadFileInput {
   threadId?: string;
   /** Cancels the request when the tile is taken back mid-flight. */
   signal?: AbortSignal;
+  /** Bytes reaching the gateway, for the tile that is showing the wait. */
+  onProgress?: (progress: UploadProgress) => void;
 }
 
 /**
@@ -224,12 +226,13 @@ export const useUploadFile = (roomId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ file, description, text, threadId, signal }: UploadFileInput) =>
+    mutationFn: ({ file, description, text, threadId, signal, onProgress }: UploadFileInput) =>
       client.files.upload(roomId, file, {
         ...(description ? { description } : {}),
         ...(text ? { text } : {}),
         ...(threadId ? { threadId } : {}),
         ...(signal ? { signal } : {}),
+        ...(onProgress ? { onProgress } : {}),
       }),
     // The composer reports the failure against the tray that still holds the
     // file, which is where the retry is.

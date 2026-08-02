@@ -44,7 +44,7 @@ import type {
   UpdateRoomStateRequest,
 } from '@open-rocket-chat/api-contract';
 
-import { HttpTransport, type TransportOptions } from './http.js';
+import { HttpTransport, type TransportOptions, type UploadProgress } from './http.js';
 import { RealtimeConnection, type RealtimeOptions } from './realtime.js';
 
 export type ClientOptions = TransportOptions;
@@ -303,13 +303,28 @@ export class OpenRocketChatClient {
     upload: (
       roomId: string,
       file: File,
-      options: { description?: string; text?: string; threadId?: string; signal?: AbortSignal } = {},
+      options: {
+        description?: string;
+        text?: string;
+        threadId?: string;
+        signal?: AbortSignal;
+        /**
+         * Bytes reaching the gateway. Stops short of the whole story on
+         * purpose: the gateway then forwards the file to Rocket.Chat, so the
+         * last report arrives well before the message exists.
+         */
+        onProgress?: (progress: UploadProgress) => void;
+      } = {},
     ): Promise<Message> => {
       const form = new FormData();
-      form.set('file', file, file.name);
+      // Ordering is load-bearing: the gateway relays the file to Rocket.Chat as
+      // it arrives rather than holding it, and a multipart part is only
+      // readable once everything before it has been consumed. Fields written
+      // after the file would not exist yet when the relay begins.
       if (options.description) form.set('description', options.description);
       if (options.text) form.set('text', options.text);
       if (options.threadId) form.set('threadId', options.threadId);
+      form.set('file', file, file.name);
 
       return this.http.request(`/rooms/${encodeURIComponent(roomId)}/files`, {
         method: 'POST',
@@ -317,6 +332,7 @@ export class OpenRocketChatClient {
         // Uploads are the one call long enough for the user to change their
         // mind mid-flight, so the caller can abandon it.
         ...(options.signal ? { signal: options.signal } : {}),
+        ...(options.onProgress ? { onUploadProgress: options.onProgress } : {}),
       });
     },
   };

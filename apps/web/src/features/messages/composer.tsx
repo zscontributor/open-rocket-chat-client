@@ -386,6 +386,7 @@ export const Composer = ({
             await upload.mutateAsync({
               file: item.file,
               signal,
+              onProgress: ({ loaded, total }) => attachments.setProgress(item.id, loaded, total),
               ...(item.caption ? { description: item.caption } : {}),
               // The text belongs to the first file that actually goes up, not
               // to whichever one was first before the removals.
