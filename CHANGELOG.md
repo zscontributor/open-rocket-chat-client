@@ -4,6 +4,23 @@ All notable changes to this project are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until 1.0.0, minor versions may carry breaking changes; the gateway API contract this client is built against is versioned separately and travels in [open-rocket-chat-gateway](https://github.com/zscontributor/open-rocket-chat-gateway).
 
+## [0.1.1] — 2026-08-02
+
+Uploads. A staged file used to sit under a bare spinner from the moment send was pressed until the message existed, however long that took. Pairs with **gateway 0.1.1**, which fixes the upload failing outright against a Rocket.Chat that is not on localhost.
+
+### Added
+
+- **Upload progress.** The composer tile now shows a percentage and a bar while the file's bytes are leaving the browser. `fetch` reports nothing about a request body until the response starts arriving, so a call asking for progress goes through `XMLHttpRequest` instead, which is the only thing in a browser that reports it; everything else keeps using `fetch`. The XHR path is written to be indistinguishable from the other one — session cookie, multipart boundary, network and gateway errors, and aborts all behave identically — and outside a browser it falls back to `fetch`, so asking for progress is never the difference between an upload and an error
+- **The wait after the bytes have gone is named rather than guessed at.** Once the file has left the browser, what remains is Rocket.Chat receiving it, storing it and making a message of it — a stretch that cannot be measured from here at all, and that is most of the wait when the gateway is the near thing and Rocket.Chat the distant one. The tile says so. A bar frozen at 100% reads as stuck, and a spinner appearing from nowhere reads as the progress having vanished. Labels for English, Vietnamese and Japanese
+
+### Changed
+
+- `files.upload` writes `description`, `text` and `threadId` before the file. The gateway relays the file to Rocket.Chat as it arrives rather than holding it, and a multipart part is only readable once everything before it has been consumed, so a caption written after the file would not exist yet when the relay begins. The gateway reads trailing fields as a fallback, so either order works
+
+### Notes
+
+Progress measures the browser-to-gateway leg, which is the whole journey only where the gateway is the far end — the deployment this is built for. Running the gateway on localhost against a distant Rocket.Chat inverts that: the bar fills at once and the named wait that follows is the real one.
+
 ## [0.1.0] — 2026-08-02
 
 First public release. An independent, community-driven frontend for [Rocket.Chat](https://rocket.chat)-compatible servers: React 19 and Vite, built as static files you can serve from anywhere, talking to Rocket.Chat only through the [Open Rocket.Chat Gateway](https://github.com/zscontributor/open-rocket-chat-gateway) so no Rocket.Chat auth token ever reaches the browser.
@@ -94,4 +111,5 @@ Pairs with **gateway 0.1.0**. This is a `0.x` release: it has run in production 
 
 MIT © [Z-SOFT Co., Ltd.](https://z-soft.com.vn) The whole production dependency tree is 174 packages under permissive terms only — no copyleft licence appears in what you serve.
 
+[0.1.1]: https://github.com/zscontributor/open-rocket-chat-client/releases/tag/v0.1.1
 [0.1.0]: https://github.com/zscontributor/open-rocket-chat-client/releases/tag/v0.1.0
