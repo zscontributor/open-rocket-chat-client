@@ -2,7 +2,7 @@ export { OpenRocketChatClient } from './client.js';
 export type { ClientOptions } from './client.js';
 
 export { HttpTransport } from './http.js';
-export type { HttpOptions, TransportOptions } from './http.js';
+export type { HttpOptions, TransportOptions, UploadProgress } from './http.js';
 
 export { RealtimeConnection } from './realtime.js';
 export type { RealtimeOptions, RealtimeStatus, RealtimeStatusInfo, Unsubscribe } from './realtime.js';
