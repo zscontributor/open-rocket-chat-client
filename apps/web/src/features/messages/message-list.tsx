@@ -1,6 +1,6 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { format } from 'date-fns';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useContextualBarStore } from '@/features/rooms/contextual-bar/store';
@@ -34,7 +34,13 @@ const OVERSCAN = 8;
 /** Distance from the top, in pixels, at which the next page is requested. */
 const LOAD_MORE_THRESHOLD = 400;
 
-/** Treated as "at the bottom", so an arriving message keeps the view pinned. */
+/**
+ * Treated as "at the bottom", so an arriving message keeps the view pinned.
+ *
+ * The same figure decides whether "jump to recent" is offered, and deliberately
+ * so: the button is there to say the timeline has stopped following the room,
+ * and it would be a lie shown at any other distance than the one that stops it.
+ */
 const STICK_TO_BOTTOM_THRESHOLD = 80;
 
 /**
@@ -69,6 +75,14 @@ export const MessageList = ({
 
   const viewport = useRef<HTMLDivElement>(null);
   const stickToBottom = useRef(true);
+  /**
+   * The same fact as `stickToBottom`, in a form that can be rendered.
+   *
+   * It is held twice because the two readers need it at different moments: the
+   * layout effect below has to know before paint, which a ref can answer and a
+   * state update cannot, and the button has to be drawn, which is the opposite.
+   */
+  const [atBottom, setAtBottom] = useState(true);
   /** Row that opened the list at the previous commit, which is how a prepended page is spotted. */
   const previousFirstKey = useRef<string | null>(null);
   /** Scrollable height at the previous commit, which is how much that page added. */
@@ -115,6 +129,7 @@ export const MessageList = ({
     stickToBottom.current = true;
     previousFirstKey.current = null;
     previousHeight.current = 0;
+    setAtBottom(true);
   }, [roomId]);
 
   // Runs before paint, so an arriving message (stay pinned to the bottom) can
@@ -151,11 +166,36 @@ export const MessageList = ({
 
     const distanceFromBottom = element.scrollHeight - element.scrollTop - element.clientHeight;
     stickToBottom.current = distanceFromBottom < STICK_TO_BOTTOM_THRESHOLD;
+    // Called for every frame of a scroll, so it is left to React to drop the
+    // update when the answer has not actually changed — which is nearly always.
+    setAtBottom(stickToBottom.current);
 
     if (element.scrollTop < LOAD_MORE_THRESHOLD && hasNextPage && !isFetchingNextPage) {
       void fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  /**
+   * Takes the timeline back to the newest message and leaves it following the
+   * room again.
+   *
+   * The jump is instant rather than animated. A smooth scroll past thousands of
+   * rows would have to measure every one of them on the way, and the virtualiser
+   * suspends the corrections that keep the position honest while one is running
+   * — so the pleasant version is also the one that lands somewhere else.
+   *
+   * `stickToBottom` is set here rather than left to the scroll event that this
+   * causes, because a row can be measured in between, and the effect that reads
+   * it would spend that frame holding the old position.
+   */
+  const jumpToRecent = useCallback(() => {
+    const element = viewport.current;
+    if (!element) return;
+
+    stickToBottom.current = true;
+    setAtBottom(true);
+    element.scrollTop = element.scrollHeight;
+  }, []);
 
   useEffect(() => {
     const element = viewport.current;
@@ -228,64 +268,81 @@ export const MessageList = ({
   }
 
   return (
-    <div ref={viewport} className="scrollbar-slim bg-app flex-1 overflow-y-auto">
-      {isFetchingNextPage ? (
-        <div className="text-content-muted flex items-center justify-center gap-2 py-3 text-xs">
-          <Spinner className="size-3" /> {t('loadingOlder')}
+    // The button floats over the timeline rather than sitting inside it: a
+    // child of the scroller would add to its height, and every measurement
+    // here is taken from that height.
+    <div className="relative flex min-h-0 flex-1 flex-col">
+      <div ref={viewport} className="scrollbar-slim bg-app flex-1 overflow-y-auto">
+        {isFetchingNextPage ? (
+          <div className="text-content-muted flex items-center justify-center gap-2 py-3 text-xs">
+            <Spinner className="size-3" /> {t('loadingOlder')}
+          </div>
+        ) : null}
+
+        {data?.gapBefore ? (
+          <div className="border-line bg-raised m-4 rounded-lg border p-3 text-xs">
+            <p className="font-medium">{t('gap.title')}</p>
+            <p className="text-content-muted mt-1">{t('gap.detail')}</p>
+            <Button size="sm" className="mt-2" onClick={() => window.location.reload()}>
+              {tCommon('action.reload')}
+            </Button>
+          </div>
+        ) : null}
+
+        {!hasNextPage && rows.length > 0 ? (
+          <p className="text-content-muted px-4 py-6 text-center text-xs">{t('beginning')}</p>
+        ) : null}
+
+        {rows.length === 0 ? <p className="text-content-muted p-8 text-center text-sm">{t('empty')}</p> : null}
+
+        {/* Full-height spacer with rows positioned inside it — what lets the
+            browser scroll a list it has not actually rendered. */}
+        <div className="relative w-full" style={{ height: totalSize }}>
+          {virtualRows.map((virtualRow) => {
+            const row = rows[virtualRow.index];
+            if (!row) return null;
+
+            return (
+              <div
+                key={virtualRow.key}
+                data-index={virtualRow.index}
+                // Measured after mount: a photo or a code block is many times the
+                // height of a one-line message, and estimating would misplace
+                // everything below it.
+                ref={virtualizer.measureElement}
+                className="absolute top-0 left-0 w-full"
+                style={{ transform: `translateY(${virtualRow.start}px)` }}
+              >
+                {row.kind === 'date' ? (
+                  <div className="flex items-center gap-2 px-4 py-2">
+                    <span className="bg-line h-px flex-1" />
+                    <span className="bg-raised text-content-muted rounded-full px-2.5 py-0.5 text-[11px] font-medium">
+                      {format(new Date(row.at), 'EEEE, d MMMM yyyy')}
+                    </span>
+                    <span className="bg-line h-px flex-1" />
+                  </div>
+                ) : (
+                  renderMessage(row)
+                )}
+              </div>
+            );
+          })}
         </div>
-      ) : null}
 
-      {data?.gapBefore ? (
-        <div className="border-line bg-raised m-4 rounded-lg border p-3 text-xs">
-          <p className="font-medium">{t('gap.title')}</p>
-          <p className="text-content-muted mt-1">{t('gap.detail')}</p>
-          <Button size="sm" className="mt-2" onClick={() => window.location.reload()}>
-            {tCommon('action.reload')}
-          </Button>
-        </div>
-      ) : null}
-
-      {!hasNextPage && rows.length > 0 ? (
-        <p className="text-content-muted px-4 py-6 text-center text-xs">{t('beginning')}</p>
-      ) : null}
-
-      {rows.length === 0 ? <p className="text-content-muted p-8 text-center text-sm">{t('empty')}</p> : null}
-
-      {/* Full-height spacer with rows positioned inside it — what lets the
-          browser scroll a list it has not actually rendered. */}
-      <div className="relative w-full" style={{ height: totalSize }}>
-        {virtualRows.map((virtualRow) => {
-          const row = rows[virtualRow.index];
-          if (!row) return null;
-
-          return (
-            <div
-              key={virtualRow.key}
-              data-index={virtualRow.index}
-              // Measured after mount: a photo or a code block is many times the
-              // height of a one-line message, and estimating would misplace
-              // everything below it.
-              ref={virtualizer.measureElement}
-              className="absolute top-0 left-0 w-full"
-              style={{ transform: `translateY(${virtualRow.start}px)` }}
-            >
-              {row.kind === 'date' ? (
-                <div className="flex items-center gap-2 px-4 py-2">
-                  <span className="bg-line h-px flex-1" />
-                  <span className="bg-raised text-content-muted rounded-full px-2.5 py-0.5 text-[11px] font-medium">
-                    {format(new Date(row.at), 'EEEE, d MMMM yyyy')}
-                  </span>
-                  <span className="bg-line h-px flex-1" />
-                </div>
-              ) : (
-                renderMessage(row)
-              )}
-            </div>
-          );
-        })}
+        <div className="h-4" />
       </div>
 
-      <div className="h-4" />
+      {!atBottom && rows.length > 0 ? (
+        <Button
+          size="sm"
+          variant="primary"
+          onClick={jumpToRecent}
+          className="absolute bottom-4 left-1/2 z-20 -translate-x-1/2 rounded-full pr-3.5 pl-3 shadow-lg"
+        >
+          <Icons.chevronDown size={16} />
+          {t('jumpToRecent')}
+        </Button>
+      ) : null}
     </div>
   );
 };
