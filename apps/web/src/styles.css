@@ -58,6 +58,10 @@
   --color-success: var(--orc-status-success, #22a06b);
   --color-info: var(--orc-status-info, #3b82f6);
 
+  /* The highlighter behind a search term. Not a theme token — see below. */
+  --color-marked: var(--orc-marked-surface, #fde68a);
+  --color-marked-content: var(--orc-marked-content, #422006);
+
   --radius-sm: var(--orc-radius-sm, 6px);
   --radius-md: var(--orc-radius-md, 10px);
   --radius-lg: var(--orc-radius-lg, 14px);
@@ -112,6 +116,31 @@
   ::selection {
     @apply bg-accent/25;
   }
+}
+
+/*
+ * The highlighter drawn behind a search term in the results it was found in.
+ *
+ * Yellow, because that is what a highlighter is: a search result is scanned for
+ * the word, and the reader is looking for the colour rather than for a shade of
+ * the interface. Kept out of the theme contract for the same reason the syntax
+ * colours below are — the contract is validated and every token in it required,
+ * so a theme written before this existed would stop loading. A theme that wants
+ * its own can still set both properties from its own stylesheet.
+ *
+ * The two schemes are not the same yellow. A light panel takes a soft wash with
+ * near-black on top; on a dark one that wash would be a hole punched in the
+ * page, so it is dimmed to the gold it would be under low light and the text
+ * goes pale. Both clear 5:1 against their own background.
+ */
+:root {
+  --orc-marked-surface: #fde68a;
+  --orc-marked-content: #422006;
+}
+
+[data-color-scheme='dark'] {
+  --orc-marked-surface: #7a5d0a;
+  --orc-marked-content: #fef3c7;
 }
 
 /*
