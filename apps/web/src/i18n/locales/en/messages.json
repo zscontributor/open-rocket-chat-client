@@ -4,6 +4,10 @@
   "loadingOlder": "Loading older messages…",
   "loading": "Loading messages…",
   "jumpToRecent": "Jump to recent",
+  "jump": {
+    "tooFarBack": "That message is further back than the timeline will load.",
+    "missing": "That message is no longer in this conversation."
+  },
   "edited": "edited",
   "encrypted": "This message is end-to-end encrypted and cannot be shown.",
   "mention": {

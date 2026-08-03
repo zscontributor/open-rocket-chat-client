@@ -10,8 +10,8 @@ import { canPostToRoom, useCapabilities } from '@/features/server/use-capabiliti
 import { useServerConnection, useServerId } from '@/features/servers/server-scope';
 import { roomScopeKey, useUiStore } from '@/stores/ui-store';
 import { Icons } from '@/ui/icon';
-import { ContextualBar, useContextualBarOverlay } from './contextual-bar/contextual-bar';
-import { useContextualBarStore } from './contextual-bar/store';
+import { ContextualBar } from './contextual-bar/contextual-bar';
+import { useContextualBarOverlay, useContextualBarStore } from './contextual-bar/store';
 import { RoomHeader } from './room-header';
 import { useMarkRoomRead, useRoom, useRoomMembers } from './use-rooms';
 

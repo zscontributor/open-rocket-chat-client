@@ -1,11 +1,13 @@
+import type { Message } from '@open-rocket-chat/client-sdk';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { searchTerms } from '@/features/messages/highlight';
+import { useJumpStore } from '@/features/messages/jump-store';
 import { Icons } from '@/ui/icon';
 import { MessageRow } from '../message-row';
 import { PanelBody, PanelSearch, PanelState, PanelToolbar } from '../panel';
-import { useContextualBarStore } from '../store';
+import { useContextualBarOverlay, useContextualBarStore } from '../store';
 import { useDebounced, useMessageSearch } from '../use-panels';
 
 /**
@@ -21,6 +23,9 @@ export const SearchPanel = ({ roomId }: { roomId: string }) => {
   // Pushed, so a thread opened from a result can come back to the results —
   // re-running a search you had already typed is the alternative.
   const push = useContextualBarStore((state) => state.push);
+  const closeBar = useContextualBarStore((state) => state.close);
+  const barOverlays = useContextualBarOverlay();
+  const jumpTo = useJumpStore((state) => state.jumpTo);
   const [term, setTerm] = useState('');
   const debouncedTerm = useDebounced(term);
 
@@ -31,6 +36,27 @@ export const SearchPanel = ({ roomId }: { roomId: string }) => {
   // the results on screen instead of a search still being typed. Held steady
   // between those, so a keystroke does not re-parse every body in the list.
   const terms = useMemo(() => searchTerms(debouncedTerm), [debouncedTerm]);
+
+  /**
+   * Opening a result, which means going to where the message actually is.
+   *
+   * A reply is not in the timeline at all — it lives in its thread, and that is
+   * the only place it can be read in context. Everything else, thread parents
+   * included, is a row of the room, so the room is where the result leads.
+   */
+  const openResult = (message: Message) => {
+    if (message.threadId) {
+      push({ id: 'thread', messageId: message.threadId });
+      return;
+    }
+
+    jumpTo(roomId, message.id);
+
+    // On a narrow viewport this panel is drawn over the conversation rather
+    // than beside it, so leaving it open would jump to a message it is
+    // standing on. Where both fit, the results are worth keeping.
+    if (barOverlays) closeBar();
+  };
 
   return (
     <>
@@ -53,15 +79,7 @@ export const SearchPanel = ({ roomId }: { roomId: string }) => {
             <ul className="divide-line divide-y">
               {results.map((message) => (
                 <li key={message.id}>
-                  <MessageRow
-                    message={message}
-                    highlight={terms}
-                    onClick={
-                      message.threadId || message.threadCount > 0
-                        ? () => push({ id: 'thread', messageId: message.threadId ?? message.id })
-                        : undefined
-                    }
-                  />
+                  <MessageRow message={message} highlight={terms} onClick={() => openResult(message)} />
                 </li>
               ))}
             </ul>
