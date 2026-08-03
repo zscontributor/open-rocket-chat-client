@@ -4,6 +4,32 @@ All notable changes to this project are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Until 1.0.0, minor versions may carry breaking changes; the gateway API contract this client is built against is versioned separately and travels in [open-rocket-chat-gateway](https://github.com/zscontributor/open-rocket-chat-gateway).
 
+## [0.1.2] — 2026-08-03
+
+Reading a room, and carrying a message out of one. Search results now lead somewhere instead of ending at themselves, a timeline scrolled up stays where it was put, and a message can be quoted where it was said or forwarded to rooms that have not seen it. Client-only: pairs with **gateway 0.1.1**, unchanged.
+
+### Added
+
+- **Quote a message while answering it.** Quote in the hover toolbar stages the message above the message box rather than opening a dialog — the reply is typed where it was always going to be typed, and the strip above it names the author and echoes what is being quoted until it is sent, dismissed, or dismissed with Escape. A quote with nothing typed under it is a message in its own right, so it sends. Quoting and editing exclude each other in both directions: they share one message box, and a quote left staged behind an edit would be dropped silently when the edit saved
+- **Forward a message on to other rooms.** Any number of rooms at once, since forwarding the same message to four people one dialog at a time would mean finding it again in a timeline that has since scrolled away. Targets are limited to rooms you may actually post to, and — when the message carries files — to rooms that accept uploads. Rooms are delivered to one at a time and a failure does not stop the ones behind it: what failed is named and becomes the selection, so the button retries exactly the rooms the message is missing from. Uploads are genuinely re-uploaded, because Rocket.Chat binds a file to the room it was posted to
+- **A search result takes you to the message in the room.** Clicking one walks the timeline back to it and marks it. The history is loaded a page at a time, up to a budget of twenty pages, after which it says which wall it hit — a room too long to walk, or a message no longer in it. A threaded reply still opens its thread, which is the only place it can be read in context
+- **The search term is marked in the results it found.** The server returns the messages and nothing about where inside them the match was, so the term is found again on the client and wrapped in a `<mark>` — inside bold, inside a list, inside a quote, and left alone inside a code span. Search operators (`from:`, `is:`) are dropped from the terms, since they choose which messages come back rather than describe what is in them
+- **A way back to the newest message.** A button over the foot of the timeline, appearing at exactly the distance that stops the list following the room, and taking it back to the bottom
+
+### Changed
+
+- Emoji and GIF now open the composer toolbar, ahead of the paperclip, the folder and the formatting menu — the two most-reached-for controls were the furthest from where the hand starts
+- The search mark is drawn as a highlighter rather than in the theme's accent. A reader scanning a result is looking for a highlighter, so it is yellow: a soft wash with near-black on top in light, dimmed to gold with pale text in dark, both clearing 5:1 against their own background. Defined beside the syntax colours rather than added to the theme contract, so a theme written before this existed still loads
+
+### Fixed
+
+- **The timeline no longer drifts back to the bottom when scrolled up.** Scroll compensation was applied whenever the virtualiser's total height grew, on the assumption that growth meant a page of older messages had arrived — but the total also grows every time an estimated row is measured for real, and the virtualiser already handles that case. Compensation is now offered only when a page genuinely landed. The scroll anchors are reset when the room changes too, so a list scrolled up in one room no longer opens the next one at the same offset
+- **Search results survive backing out of a thread.** Opening a thread from a result unmounted the search panel and took the term with it. The term and the list's scroll offset are now written onto the search tab's own stack entry on the way in, and the results come straight from the query cache
+
+### Notes
+
+Quoting and forwarding both post a Markdown blockquote rather than a Rocket.Chat quote attachment. That attachment is built server-side from a permalink written into the message text, and neither half is reachable from this client: the gateway's send route takes text and attachment ids and nothing else, and it never tells a client the Rocket.Chat URL a permalink would need. The blockquote reads correctly in every client that opens the room afterwards — Rocket.Chat's own included — but it carries no route back to the original, so a reader gets the words without the jump.
+
 ## [0.1.1] — 2026-08-02
 
 Uploads. A staged file used to sit under a bare spinner from the moment send was pressed until the message existed, however long that took. Pairs with **gateway 0.1.1**, which fixes the upload failing outright against a Rocket.Chat that is not on localhost.
@@ -111,5 +137,6 @@ Pairs with **gateway 0.1.0**. This is a `0.x` release: it has run in production 
 
 MIT © [Z-SOFT Co., Ltd.](https://z-soft.com.vn) The whole production dependency tree is 174 packages under permissive terms only — no copyleft licence appears in what you serve.
 
+[0.1.2]: https://github.com/zscontributor/open-rocket-chat-client/releases/tag/v0.1.2
 [0.1.1]: https://github.com/zscontributor/open-rocket-chat-client/releases/tag/v0.1.1
 [0.1.0]: https://github.com/zscontributor/open-rocket-chat-client/releases/tag/v0.1.0
