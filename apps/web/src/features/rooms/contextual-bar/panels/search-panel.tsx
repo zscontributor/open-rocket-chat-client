@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { searchTerms } from '@/features/messages/highlight';
 import { Icons } from '@/ui/icon';
 import { MessageRow } from '../message-row';
 import { PanelBody, PanelSearch, PanelState, PanelToolbar } from '../panel';
@@ -26,6 +27,11 @@ export const SearchPanel = ({ roomId }: { roomId: string }) => {
   const search = useMessageSearch(roomId, debouncedTerm);
   const results = search.data ?? [];
 
+  // Taken from the debounced term rather than the typed one, so the marks match
+  // the results on screen instead of a search still being typed. Held steady
+  // between those, so a keystroke does not re-parse every body in the list.
+  const terms = useMemo(() => searchTerms(debouncedTerm), [debouncedTerm]);
+
   return (
     <>
       <PanelToolbar>
@@ -49,6 +55,7 @@ export const SearchPanel = ({ roomId }: { roomId: string }) => {
                 <li key={message.id}>
                   <MessageRow
                     message={message}
+                    highlight={terms}
                     onClick={
                       message.threadId || message.threadCount > 0
                         ? () => push({ id: 'thread', messageId: message.threadId ?? message.id })

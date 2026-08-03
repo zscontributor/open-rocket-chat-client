@@ -31,6 +31,7 @@ export const MessageRow = ({
   onClick,
   actions,
   footer,
+  highlight,
 }: {
   message: Message;
   /** Set when the row leads somewhere — a thread, mostly. */
@@ -38,6 +39,8 @@ export const MessageRow = ({
   /** Buttons revealed on hover, at the row's top-right. */
   actions?: ReactNode;
   footer?: ReactNode;
+  /** Terms to mark in the body, for the panel that put them there. */
+  highlight?: readonly string[];
 }) => {
   const { t } = useTranslation('messages');
 
@@ -67,7 +70,7 @@ export const MessageRow = ({
         ) : message.text ? (
           // Clamped rather than scrolled: a wall of text in a side list is
           // navigation, and the full message is one click away in the room.
-          <MessageBody text={message.text} className="mt-0.5 line-clamp-4 text-sm break-words" />
+          <MessageBody text={message.text} highlight={highlight} className="mt-0.5 line-clamp-4 text-sm break-words" />
         ) : null}
 
         {attachment ? (
