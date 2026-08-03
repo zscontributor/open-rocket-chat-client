@@ -29,6 +29,7 @@
   "action": {
     "addReaction": "リアクションを追加",
     "replyInThread": "スレッドで返信",
+    "forward": "転送",
     "star": "スターを付ける",
     "unstar": "スターを外す",
     "pin": "ピン留め",
@@ -38,6 +39,24 @@
     "copied": "コピーしました",
     "delete": "メッセージを削除",
     "copyLink": "リンクをコピー"
+  },
+  "forward": {
+    "title": "メッセージを転送",
+    "detail": "送信先のルームを選んでください。",
+    "search": "ルームを検索",
+    "searchPlaceholder": "ルームを検索…",
+    "rooms": "ルーム",
+    "roomsFailed": "ルーム一覧を読み込めませんでした。",
+    "noRooms": "投稿できるルームがありません。",
+    "noMatches": "“{{query}}” に一致するルームはありません。",
+    "comment": "コメントを追加",
+    "commentPlaceholder": "コメントを追加（任意）",
+    "selected_one": "{{count}}件のルームを選択中",
+    "selected_other": "{{count}}件のルームを選択中",
+    "submit": "転送",
+    "sent_one": "{{count}}件のルームに転送しました",
+    "sent_other": "{{count}}件のルームに転送しました",
+    "failed": "{{rooms}} に転送できませんでした。"
   },
   "typing": {
     "one": "{{name}} が入力中…",

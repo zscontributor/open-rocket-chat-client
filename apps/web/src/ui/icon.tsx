@@ -1,6 +1,7 @@
 import {
   IconContext,
   AppleLogo,
+  ArrowBendDoubleUpRight,
   ArrowLeft,
   ArrowsOutSimple,
   At,
@@ -148,6 +149,9 @@ export const Icons = {
   fileSlides: FilePpt,
   fileVideo: FileVideo,
   filter: Funnel,
+  // The double bend is the forward mark; the single one everybody reads as a
+  // reply, which is a different action this toolbar already offers.
+  forward: ArrowBendDoubleUpRight,
   formatting: TextAa,
   // The formatting menu's own marks, named after the action rather than the
   // markup so the toolbar reads the same as the shortcuts panel.

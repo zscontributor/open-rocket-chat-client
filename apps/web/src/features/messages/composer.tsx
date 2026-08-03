@@ -986,6 +986,34 @@ export const Composer = ({
           />
         ) : (
           <div className="flex items-center gap-0.5 px-2 pb-2">
+            <EmojiPicker
+              onSelect={insertEmoji}
+              trigger={
+                <button
+                  type="button"
+                  aria-label={t('action.emoji')}
+                  title={t('action.emoji')}
+                  disabled={disabled}
+                  className="text-content-muted hover:bg-sunken hover:text-content flex size-8 items-center justify-center rounded-md transition-colors disabled:opacity-40"
+                >
+                  <Icons.emoji size={18} />
+                </button>
+              }
+            />
+            <GifPicker
+              onSelect={attachGif}
+              trigger={
+                <button
+                  type="button"
+                  aria-label={t('action.gif')}
+                  title={t('action.gif')}
+                  disabled={disabled || Boolean(editing)}
+                  className="text-content-muted hover:bg-sunken hover:text-content flex size-8 items-center justify-center rounded-md transition-colors disabled:opacity-40"
+                >
+                  <Icons.gif size={18} />
+                </button>
+              }
+            />
             {uploadsAllowed ? (
               <ToolbarButton
                 label={t('action.attachFiles')}
@@ -1017,34 +1045,6 @@ export const Composer = ({
                   className="text-content-muted hover:bg-sunken hover:text-content flex size-8 items-center justify-center rounded-md transition-colors disabled:opacity-40"
                 >
                   <Icons.formatting size={18} />
-                </button>
-              }
-            />
-            <EmojiPicker
-              onSelect={insertEmoji}
-              trigger={
-                <button
-                  type="button"
-                  aria-label={t('action.emoji')}
-                  title={t('action.emoji')}
-                  disabled={disabled}
-                  className="text-content-muted hover:bg-sunken hover:text-content flex size-8 items-center justify-center rounded-md transition-colors disabled:opacity-40"
-                >
-                  <Icons.emoji size={18} />
-                </button>
-              }
-            />
-            <GifPicker
-              onSelect={attachGif}
-              trigger={
-                <button
-                  type="button"
-                  aria-label={t('action.gif')}
-                  title={t('action.gif')}
-                  disabled={disabled || Boolean(editing)}
-                  className="text-content-muted hover:bg-sunken hover:text-content flex size-8 items-center justify-center rounded-md transition-colors disabled:opacity-40"
-                >
-                  <Icons.gif size={18} />
                 </button>
               }
             />

@@ -29,6 +29,7 @@
   "action": {
     "addReaction": "Add reaction",
     "replyInThread": "Reply in thread",
+    "forward": "Forward",
     "star": "Star",
     "unstar": "Remove star",
     "pin": "Pin",
@@ -38,6 +39,24 @@
     "copied": "Copied",
     "delete": "Delete message",
     "copyLink": "Copy link"
+  },
+  "forward": {
+    "title": "Forward message",
+    "detail": "Pick the rooms it should be sent to.",
+    "search": "Search rooms",
+    "searchPlaceholder": "Search rooms…",
+    "rooms": "Rooms",
+    "roomsFailed": "The room list could not be loaded.",
+    "noRooms": "There are no rooms you can post to.",
+    "noMatches": "No rooms match “{{query}}”.",
+    "comment": "Add a comment",
+    "commentPlaceholder": "Add a comment (optional)",
+    "selected_one": "{{count}} room selected",
+    "selected_other": "{{count}} rooms selected",
+    "submit": "Forward",
+    "sent_one": "Forwarded to {{count}} room",
+    "sent_other": "Forwarded to {{count}} rooms",
+    "failed": "Could not forward to {{rooms}}."
   },
   "typing": {
     "one": "{{name}} is typing…",
