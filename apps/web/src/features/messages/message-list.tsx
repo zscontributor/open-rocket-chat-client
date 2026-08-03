@@ -69,8 +69,10 @@ export const MessageList = ({
 
   const viewport = useRef<HTMLDivElement>(null);
   const stickToBottom = useRef(true);
-  /** Total content height at the previous render, for prepend compensation. */
-  const previousTotal = useRef(0);
+  /** Row that opened the list at the previous commit, which is how a prepended page is spotted. */
+  const previousFirstKey = useRef<string | null>(null);
+  /** Scrollable height at the previous commit, which is how much that page added. */
+  const previousHeight = useRef(0);
 
   const messages = useMemo(() => data?.messages ?? [], [data]);
   const grouping = groupingPeriodMs(capabilities);
@@ -106,22 +108,42 @@ export const MessageList = ({
   const virtualRows = virtualizer.getVirtualItems();
   const totalSize = virtualizer.getTotalSize();
 
+  // Another room opens at its newest message, and the anchors taken in the last
+  // one describe content that is no longer on the screen. Declared first so a
+  // room change is reset before the effect below reads any of it.
+  useLayoutEffect(() => {
+    stickToBottom.current = true;
+    previousFirstKey.current = null;
+    previousHeight.current = 0;
+  }, [roomId]);
+
   // Runs before paint, so an arriving message (stay pinned to the bottom) can
   // be told apart from a page of older ones being prepended (hold position).
+  //
+  // Rows growing from their estimate as they are measured is deliberately not
+  // compensated for here. The virtualiser already moves the scroll position
+  // when a row above the fold turns out taller than the guess, and correcting
+  // it a second time dragged the viewport down by one row's error for every row
+  // that came into view — scrolling up a little walked straight back to the
+  // bottom, which is where the drift ends.
   useLayoutEffect(() => {
     const element = viewport.current;
     if (!element) return;
 
+    const firstKey = rows[0]?.key ?? null;
+
     if (stickToBottom.current) {
       element.scrollTop = element.scrollHeight;
-    } else if (previousTotal.current && totalSize > previousTotal.current) {
-      // Content grew above the viewport, so the scroll position moves by the
-      // same amount and the message under the cursor stays under the cursor.
-      element.scrollTop += totalSize - previousTotal.current;
+    } else if (previousFirstKey.current !== null && firstKey !== previousFirstKey.current) {
+      // The row that used to open the list has been pushed down, so a page
+      // landed above the viewport: move by exactly what it added, and the
+      // message under the cursor stays under the cursor.
+      element.scrollTop += element.scrollHeight - previousHeight.current;
     }
 
-    previousTotal.current = totalSize;
-  }, [totalSize]);
+    previousFirstKey.current = firstKey;
+    previousHeight.current = element.scrollHeight;
+  }, [rows, totalSize]);
 
   const onScroll = useCallback(() => {
     const element = viewport.current;
