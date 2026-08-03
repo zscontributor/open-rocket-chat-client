@@ -3,6 +3,7 @@
   "beginning": "ここが会話の始まりです。",
   "loadingOlder": "過去のメッセージを読み込み中…",
   "loading": "メッセージを読み込み中…",
+  "jumpToRecent": "最新へ移動",
   "edited": "編集済み",
   "encrypted": "このメッセージはエンドツーエンドで暗号化されているため表示できません。",
   "mention": {
