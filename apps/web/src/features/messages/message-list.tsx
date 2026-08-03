@@ -1,6 +1,6 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { format } from 'date-fns';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useContextualBarStore } from '@/features/rooms/contextual-bar/store';
@@ -9,17 +9,28 @@ import {
   canDeleteMessage,
   canEditMessage,
   canPinMessage,
+  canPostToRoom,
   canReact,
   canStarMessage,
   canUseThreads,
   groupingPeriodMs,
   useCapabilities,
 } from '@/features/server/use-capabilities';
+import { cn } from '@/lib/cn';
 import { describeError } from '@/lib/errors';
+import { showToast } from '@/stores/toast-store';
 import { Button } from '@/ui/button';
 import { Icons, Spinner } from '@/ui/icon';
+import { useJumpStore } from './jump-store';
 import { MessageItem, type MessageAbilities } from './message-item';
-import { buildMessageRows, flaggedMessages, reactedMessages, type MessageRow } from './message-rows';
+import {
+  buildMessageRows,
+  flaggedMessages,
+  reactedMessages,
+  rowHasMessage,
+  rowIndexOfMessage,
+  type MessageRow,
+} from './message-rows';
 import { useDeleteMessage, useMessages, useSetMessageFlag, useToggleReaction } from './use-messages';
 
 /**
@@ -34,8 +45,28 @@ const OVERSCAN = 8;
 /** Distance from the top, in pixels, at which the next page is requested. */
 const LOAD_MORE_THRESHOLD = 400;
 
-/** Treated as "at the bottom", so an arriving message keeps the view pinned. */
+/**
+ * Treated as "at the bottom", so an arriving message keeps the view pinned.
+ *
+ * The same figure decides whether "jump to recent" is offered, and deliberately
+ * so: the button is there to say the timeline has stopped following the room,
+ * and it would be a lie shown at any other distance than the one that stops it.
+ */
 const STICK_TO_BOTTOM_THRESHOLD = 80;
+
+/**
+ * How many pages of history a jump will load looking for its message.
+ *
+ * The timeline pages backwards from the newest message and has no way to open
+ * in the middle, so reaching something older means loading everything between.
+ * A search can return a message from a year ago, and walking back to it a page
+ * at a time would be hundreds of requests — this is where it stops asking and
+ * says so instead.
+ */
+const JUMP_PAGE_BUDGET = 20;
+
+/** How long a message stays marked after a jump lands on it. */
+const LANDING_FLASH_MS = 2_500;
 
 /**
  * The message timeline.
@@ -69,8 +100,27 @@ export const MessageList = ({
 
   const viewport = useRef<HTMLDivElement>(null);
   const stickToBottom = useRef(true);
-  /** Total content height at the previous render, for prepend compensation. */
-  const previousTotal = useRef(0);
+  /**
+   * The same fact as `stickToBottom`, in a form that can be rendered.
+   *
+   * It is held twice because the two readers need it at different moments: the
+   * layout effect below has to know before paint, which a ref can answer and a
+   * state update cannot, and the button has to be drawn, which is the opposite.
+   */
+  const [atBottom, setAtBottom] = useState(true);
+  /** Row that opened the list at the previous commit, which is how a prepended page is spotted. */
+  const previousFirstKey = useRef<string | null>(null);
+  /** Scrollable height at the previous commit, which is how much that page added. */
+  const previousHeight = useRef(0);
+
+  // Only this room's jumps: the request outlives the click that made it, and a
+  // message named while another room was open is not this timeline's to find.
+  const jumpTo = useJumpStore((state) => (state.target?.roomId === roomId ? state.target.messageId : null));
+  const clearJump = useJumpStore((state) => state.clear);
+  /** The message a jump landed on, marked for a moment so the eye can find it. */
+  const [landedOn, setLandedOn] = useState<string | null>(null);
+  /** The jump being worked on, and how many more pages it may spend looking. */
+  const jumpBudget = useRef({ messageId: null as string | null, pages: 0 });
 
   const messages = useMemo(() => data?.messages ?? [], [data]);
   const grouping = groupingPeriodMs(capabilities);
@@ -88,6 +138,9 @@ export const MessageList = ({
       star: canStarMessage(capabilities),
       react: canReact(capabilities, room),
       thread: canUseThreads(capabilities),
+      // Quoting writes a new message, so it is gated on the same check that
+      // decides whether the box below the timeline takes one.
+      quote: canPostToRoom(capabilities, room),
       showEditedStatus: capabilities?.settings.message.showEditedStatus ?? true,
     }),
     [capabilities, room],
@@ -106,22 +159,43 @@ export const MessageList = ({
   const virtualRows = virtualizer.getVirtualItems();
   const totalSize = virtualizer.getTotalSize();
 
+  // Another room opens at its newest message, and the anchors taken in the last
+  // one describe content that is no longer on the screen. Declared first so a
+  // room change is reset before the effect below reads any of it.
+  useLayoutEffect(() => {
+    stickToBottom.current = true;
+    previousFirstKey.current = null;
+    previousHeight.current = 0;
+    setAtBottom(true);
+  }, [roomId]);
+
   // Runs before paint, so an arriving message (stay pinned to the bottom) can
   // be told apart from a page of older ones being prepended (hold position).
+  //
+  // Rows growing from their estimate as they are measured is deliberately not
+  // compensated for here. The virtualiser already moves the scroll position
+  // when a row above the fold turns out taller than the guess, and correcting
+  // it a second time dragged the viewport down by one row's error for every row
+  // that came into view — scrolling up a little walked straight back to the
+  // bottom, which is where the drift ends.
   useLayoutEffect(() => {
     const element = viewport.current;
     if (!element) return;
 
+    const firstKey = rows[0]?.key ?? null;
+
     if (stickToBottom.current) {
       element.scrollTop = element.scrollHeight;
-    } else if (previousTotal.current && totalSize > previousTotal.current) {
-      // Content grew above the viewport, so the scroll position moves by the
-      // same amount and the message under the cursor stays under the cursor.
-      element.scrollTop += totalSize - previousTotal.current;
+    } else if (previousFirstKey.current !== null && firstKey !== previousFirstKey.current) {
+      // The row that used to open the list has been pushed down, so a page
+      // landed above the viewport: move by exactly what it added, and the
+      // message under the cursor stays under the cursor.
+      element.scrollTop += element.scrollHeight - previousHeight.current;
     }
 
-    previousTotal.current = totalSize;
-  }, [totalSize]);
+    previousFirstKey.current = firstKey;
+    previousHeight.current = element.scrollHeight;
+  }, [rows, totalSize]);
 
   const onScroll = useCallback(() => {
     const element = viewport.current;
@@ -129,11 +203,36 @@ export const MessageList = ({
 
     const distanceFromBottom = element.scrollHeight - element.scrollTop - element.clientHeight;
     stickToBottom.current = distanceFromBottom < STICK_TO_BOTTOM_THRESHOLD;
+    // Called for every frame of a scroll, so it is left to React to drop the
+    // update when the answer has not actually changed — which is nearly always.
+    setAtBottom(stickToBottom.current);
 
     if (element.scrollTop < LOAD_MORE_THRESHOLD && hasNextPage && !isFetchingNextPage) {
       void fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  /**
+   * Takes the timeline back to the newest message and leaves it following the
+   * room again.
+   *
+   * The jump is instant rather than animated. A smooth scroll past thousands of
+   * rows would have to measure every one of them on the way, and the virtualiser
+   * suspends the corrections that keep the position honest while one is running
+   * — so the pleasant version is also the one that lands somewhere else.
+   *
+   * `stickToBottom` is set here rather than left to the scroll event that this
+   * causes, because a row can be measured in between, and the effect that reads
+   * it would spend that frame holding the old position.
+   */
+  const jumpToRecent = useCallback(() => {
+    const element = viewport.current;
+    if (!element) return;
+
+    stickToBottom.current = true;
+    setAtBottom(true);
+    element.scrollTop = element.scrollHeight;
+  }, []);
 
   useEffect(() => {
     const element = viewport.current;
@@ -142,6 +241,65 @@ export const MessageList = ({
     element.addEventListener('scroll', onScroll, { passive: true });
     return () => element.removeEventListener('scroll', onScroll);
   }, [onScroll]);
+
+  /**
+   * Reaching a message somebody pointed at — a search result, so far.
+   *
+   * The timeline pages backwards from the newest message and cannot open in the
+   * middle, so a message it has not loaded is reached by loading the history in
+   * front of it. That is done a page at a time rather than in a loop: each page
+   * changes `rows`, which runs this again, so the walk back is the render cycle
+   * itself and the spinner at the top of the list is already reporting it.
+   *
+   * The budget is what makes it stop. Rather than freeze on a message from last
+   * year, it gives up after a fixed number of pages and says which wall it hit
+   * — a history too long to walk, or a message no longer in the room at all.
+   */
+  useEffect(() => {
+    if (!jumpTo) {
+      jumpBudget.current = { messageId: null, pages: 0 };
+      return;
+    }
+
+    // A new target is a fresh budget; the same one is still spending its own.
+    if (jumpBudget.current.messageId !== jumpTo) {
+      jumpBudget.current = { messageId: jumpTo, pages: JUMP_PAGE_BUDGET };
+    }
+
+    const index = rowIndexOfMessage(rows, jumpTo);
+
+    if (index >= 0) {
+      // Set before the scroll, not after: bringing rows into view has them
+      // measured, and the effect that reads this would spend those frames
+      // pulling the timeline back to the bottom it was just taken from.
+      stickToBottom.current = false;
+      setAtBottom(false);
+      virtualizer.scrollToIndex(index, { align: 'center' });
+      setLandedOn(jumpTo);
+      clearJump();
+      return;
+    }
+
+    if (!hasNextPage || jumpBudget.current.pages === 0) {
+      clearJump();
+      showToast({ tone: 'error', message: hasNextPage ? t('jump.tooFarBack') : t('jump.missing') });
+      return;
+    }
+
+    if (!isFetchingNextPage) {
+      jumpBudget.current.pages -= 1;
+      void fetchNextPage();
+    }
+  }, [jumpTo, rows, hasNextPage, isFetchingNextPage, fetchNextPage, clearJump, virtualizer, t]);
+
+  // Long enough to find the message by eye, short enough that the mark is gone
+  // by the time the room is being read rather than searched.
+  useEffect(() => {
+    if (!landedOn) return;
+
+    const timer = setTimeout(() => setLandedOn(null), LANDING_FLASH_MS);
+    return () => clearTimeout(timer);
+  }, [landedOn]);
 
   /**
    * A row of the timeline, and the actions it offers.
@@ -206,64 +364,88 @@ export const MessageList = ({
   }
 
   return (
-    <div ref={viewport} className="scrollbar-slim bg-app flex-1 overflow-y-auto">
-      {isFetchingNextPage ? (
-        <div className="text-content-muted flex items-center justify-center gap-2 py-3 text-xs">
-          <Spinner className="size-3" /> {t('loadingOlder')}
+    // The button floats over the timeline rather than sitting inside it: a
+    // child of the scroller would add to its height, and every measurement
+    // here is taken from that height.
+    <div className="relative flex min-h-0 flex-1 flex-col">
+      <div ref={viewport} className="scrollbar-slim bg-app flex-1 overflow-y-auto">
+        {isFetchingNextPage ? (
+          <div className="text-content-muted flex items-center justify-center gap-2 py-3 text-xs">
+            <Spinner className="size-3" /> {t('loadingOlder')}
+          </div>
+        ) : null}
+
+        {data?.gapBefore ? (
+          <div className="border-line bg-raised m-4 rounded-lg border p-3 text-xs">
+            <p className="font-medium">{t('gap.title')}</p>
+            <p className="text-content-muted mt-1">{t('gap.detail')}</p>
+            <Button size="sm" className="mt-2" onClick={() => window.location.reload()}>
+              {tCommon('action.reload')}
+            </Button>
+          </div>
+        ) : null}
+
+        {!hasNextPage && rows.length > 0 ? (
+          <p className="text-content-muted px-4 py-6 text-center text-xs">{t('beginning')}</p>
+        ) : null}
+
+        {rows.length === 0 ? <p className="text-content-muted p-8 text-center text-sm">{t('empty')}</p> : null}
+
+        {/* Full-height spacer with rows positioned inside it — what lets the
+            browser scroll a list it has not actually rendered. */}
+        <div className="relative w-full" style={{ height: totalSize }}>
+          {virtualRows.map((virtualRow) => {
+            const row = rows[virtualRow.index];
+            if (!row) return null;
+
+            return (
+              <div
+                key={virtualRow.key}
+                data-index={virtualRow.index}
+                // Measured after mount: a photo or a code block is many times the
+                // height of a one-line message, and estimating would misplace
+                // everything below it.
+                ref={virtualizer.measureElement}
+                className={cn(
+                  'absolute top-0 left-0 w-full',
+                  // A wash rather than a border or a ring: the row has just been
+                  // measured to the pixel, and anything that changes its height
+                  // would move everything below the message being pointed at.
+                  'transition-colors duration-700',
+                  rowHasMessage(row, landedOn) && 'bg-accent-subtle',
+                )}
+                style={{ transform: `translateY(${virtualRow.start}px)` }}
+              >
+                {row.kind === 'date' ? (
+                  <div className="flex items-center gap-2 px-4 py-2">
+                    <span className="bg-line h-px flex-1" />
+                    <span className="bg-raised text-content-muted rounded-full px-2.5 py-0.5 text-[11px] font-medium">
+                      {format(new Date(row.at), 'EEEE, d MMMM yyyy')}
+                    </span>
+                    <span className="bg-line h-px flex-1" />
+                  </div>
+                ) : (
+                  renderMessage(row)
+                )}
+              </div>
+            );
+          })}
         </div>
-      ) : null}
 
-      {data?.gapBefore ? (
-        <div className="border-line bg-raised m-4 rounded-lg border p-3 text-xs">
-          <p className="font-medium">{t('gap.title')}</p>
-          <p className="text-content-muted mt-1">{t('gap.detail')}</p>
-          <Button size="sm" className="mt-2" onClick={() => window.location.reload()}>
-            {tCommon('action.reload')}
-          </Button>
-        </div>
-      ) : null}
-
-      {!hasNextPage && rows.length > 0 ? (
-        <p className="text-content-muted px-4 py-6 text-center text-xs">{t('beginning')}</p>
-      ) : null}
-
-      {rows.length === 0 ? <p className="text-content-muted p-8 text-center text-sm">{t('empty')}</p> : null}
-
-      {/* Full-height spacer with rows positioned inside it — what lets the
-          browser scroll a list it has not actually rendered. */}
-      <div className="relative w-full" style={{ height: totalSize }}>
-        {virtualRows.map((virtualRow) => {
-          const row = rows[virtualRow.index];
-          if (!row) return null;
-
-          return (
-            <div
-              key={virtualRow.key}
-              data-index={virtualRow.index}
-              // Measured after mount: a photo or a code block is many times the
-              // height of a one-line message, and estimating would misplace
-              // everything below it.
-              ref={virtualizer.measureElement}
-              className="absolute top-0 left-0 w-full"
-              style={{ transform: `translateY(${virtualRow.start}px)` }}
-            >
-              {row.kind === 'date' ? (
-                <div className="flex items-center gap-2 px-4 py-2">
-                  <span className="bg-line h-px flex-1" />
-                  <span className="bg-raised text-content-muted rounded-full px-2.5 py-0.5 text-[11px] font-medium">
-                    {format(new Date(row.at), 'EEEE, d MMMM yyyy')}
-                  </span>
-                  <span className="bg-line h-px flex-1" />
-                </div>
-              ) : (
-                renderMessage(row)
-              )}
-            </div>
-          );
-        })}
+        <div className="h-4" />
       </div>
 
-      <div className="h-4" />
+      {!atBottom && rows.length > 0 ? (
+        <Button
+          size="sm"
+          variant="primary"
+          onClick={jumpToRecent}
+          className="absolute bottom-4 left-1/2 z-20 -translate-x-1/2 rounded-full pr-3.5 pl-3 shadow-lg"
+        >
+          <Icons.chevronDown size={16} />
+          {t('jumpToRecent')}
+        </Button>
+      ) : null}
     </div>
   );
 };

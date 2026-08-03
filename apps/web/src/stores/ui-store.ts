@@ -75,6 +75,25 @@ export interface EditingMessage {
 export const editDraftKey = (roomId: string, messageId: string): string => `${roomId}:edit:${messageId}`;
 
 /**
+ * A message the composer will quote when the next one is sent.
+ *
+ * A copy rather than a message id: the quote is composed from what the reader
+ * saw at the moment they reached for it, and the timeline it was taken from may
+ * have paged the original out by the time send is pressed.
+ */
+export interface QuotedMessage {
+  roomId: string;
+  messageId: string;
+  /** The name the timeline showed, alias included when a bot posted under one. */
+  author: string;
+  /** When the original was posted, as an ISO instant; stamped at send time. */
+  postedAt: string;
+  text: string;
+  /** Uploads on the row. The bar names them where the message has no text. */
+  fileCount: number;
+}
+
+/**
  * Client-owned state only.
  *
  * Anything the server has an opinion about — rooms, messages, profiles — lives
@@ -135,6 +154,8 @@ interface UiState {
   enterToSend: boolean;
   /** The message the composer has been handed for editing, if any. */
   editingMessage: EditingMessage | null;
+  /** The message staged above the message box to be quoted, if any. */
+  quotedMessage: QuotedMessage | null;
   settingsOpen: boolean;
   connection: RealtimeStatus;
   /**
@@ -178,6 +199,9 @@ interface UiState {
   /** Hands a message to the composer, seeding its edit draft with the text. */
   startEditingMessage: (message: EditingMessage) => void;
   stopEditingMessage: () => void;
+  /** Stages a message above the message box; the next send quotes it. */
+  startQuotingMessage: (message: QuotedMessage) => void;
+  stopQuotingMessage: () => void;
   setSettingsOpen: (open: boolean) => void;
   setConnection: (status: RealtimeStatus, retryAt?: number) => void;
   setDraft: (roomId: string, text: string) => void;
@@ -204,6 +228,7 @@ export const useUiStore = create<UiState>((set, get) => ({
     CONTEXTUAL_BAR_WIDTH.default,
   enterToSend: readEnterToSend(),
   editingMessage: null,
+  quotedMessage: null,
   settingsOpen: false,
   connection: 'idle',
   connectionRetryAt: null,
@@ -328,7 +353,9 @@ export const useUiStore = create<UiState>((set, get) => ({
       // before the box switches slots, or the first render shows it empty.
       drafts[editDraftKey(message.roomId, message.messageId)] = message.originalText;
 
-      return { editingMessage: message, drafts };
+      // A staged quote goes with it: the box is now holding a message that is
+      // already in the room, and saving it would drop the quote silently.
+      return { editingMessage: message, quotedMessage: null, drafts };
     }),
 
   stopEditingMessage: () =>
@@ -339,6 +366,22 @@ export const useUiStore = create<UiState>((set, get) => ({
       const { [editDraftKey(editingMessage.roomId, editingMessage.messageId)]: _discarded, ...drafts } = state.drafts;
       return { editingMessage: null, drafts };
     }),
+
+  // The other half of the exchange above. An edit in progress is abandoned
+  // rather than left staged behind a quote it would never be sent with —
+  // nothing is lost that cancelling the edit would not have lost anyway, and
+  // the message it was editing stays exactly as it is.
+  startQuotingMessage: (message) =>
+    set((state) => {
+      const { editingMessage } = state;
+      if (!editingMessage) return { quotedMessage: message };
+
+      const { [editDraftKey(editingMessage.roomId, editingMessage.messageId)]: _discarded, ...drafts } = state.drafts;
+      return { quotedMessage: message, editingMessage: null, drafts };
+    }),
+
+  stopQuotingMessage: () => set({ quotedMessage: null }),
+
   setSettingsOpen: (settingsOpen) => set({ settingsOpen }),
   // Always written as a pair: an omitted deadline means the wait is over, and
   // leaving the old one behind would leave a countdown ticking into the past.

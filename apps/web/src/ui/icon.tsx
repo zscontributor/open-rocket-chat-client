@@ -1,6 +1,7 @@
 import {
   IconContext,
   AppleLogo,
+  ArrowBendDoubleUpRight,
   ArrowLeft,
   ArrowsOutSimple,
   At,
@@ -49,6 +50,7 @@ import {
   Plus,
   PlugsConnected,
   PushPin,
+  Quotes,
   SignOut,
   SmileyIcon,
   SpinnerGap,
@@ -148,6 +150,9 @@ export const Icons = {
   fileSlides: FilePpt,
   fileVideo: FileVideo,
   filter: Funnel,
+  // The double bend is the forward mark; the single one everybody reads as a
+  // reply, which is a different action this toolbar already offers.
+  forward: ArrowBendDoubleUpRight,
   formatting: TextAa,
   // The formatting menu's own marks, named after the action rather than the
   // markup so the toolbar reads the same as the shortcuts panel.
@@ -187,6 +192,9 @@ export const Icons = {
   pin: PushPin,
   preview: Eye,
   private: Lock,
+  // The quotation marks, not a bent arrow: the arrows are taken by forwarding
+  // and by replying in a thread, and a quote is neither of those.
+  quote: Quotes,
   search: MagnifyingGlass,
   send: PaperPlaneTilt,
   settings: Gear,

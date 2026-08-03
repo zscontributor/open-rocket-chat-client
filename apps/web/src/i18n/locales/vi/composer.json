@@ -33,6 +33,11 @@
     "noText": "(không có nội dung)",
     "cancel": "Dừng sửa"
   },
+  "quoting": {
+    "label": "Đang trích dẫn {{name}}:",
+    "noText": "(không có nội dung)",
+    "cancel": "Bỏ trích dẫn"
+  },
   "enterToSend": {
     "label": "Enter để gửi"
   },

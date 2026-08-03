@@ -300,3 +300,58 @@ test('inserts an emoji into the composer from the picker', async ({ page }) => {
 
   await expect(composer).toHaveValue(/ship it :rocket: $/);
 });
+
+test('quotes a message from the timeline', async ({ page }) => {
+  await signIn(page);
+  await openFirstRoom(page);
+
+  // Stamped, so a room this suite has already been run against does not match
+  // the assertions below with the leftovers of the last run.
+  const stamp = Date.now();
+  const original = `quote target ${stamp}`;
+  const comment = `agreed ${stamp}`;
+  const composer = page.getByRole('combobox', { name: /^Message / });
+  await composer.fill(original);
+  await composer.press('Enter');
+  await expect(page.getByText(original, { exact: true })).toBeVisible();
+
+  // The toolbar is hover-only, and it belongs to the row it acts on.
+  const row = page.locator('article').filter({ hasText: original }).last();
+  await row.hover();
+  await row.getByRole('button', { name: 'Quote', exact: true }).click();
+
+  // What is staged is named above the box before anything is sent.
+  await expect(page.getByText(/^Quoting /)).toBeVisible();
+
+  await composer.fill(comment);
+  await composer.press('Enter');
+
+  // The original is posted as a blockquote with the comment below it, which is
+  // what makes the quote readable in every other client too.
+  const quoted = page.locator('article').filter({ hasText: comment }).last();
+  await expect(quoted.locator('blockquote')).toContainText(original);
+  await expect(quoted.getByText(comment, { exact: true })).toBeVisible();
+
+  // Sending consumes the quote; nothing is left staged for the next message.
+  await expect(page.getByText(/^Quoting /)).toBeHidden();
+  await expect(composer).toHaveValue('');
+});
+
+test('drops a staged quote with Escape', async ({ page }) => {
+  await signIn(page);
+  await openFirstRoom(page);
+
+  const original = `escape target ${Date.now()}`;
+  const composer = page.getByRole('combobox', { name: /^Message / });
+  await composer.fill(original);
+  await composer.press('Enter');
+  await expect(page.getByText(original, { exact: true })).toBeVisible();
+
+  const row = page.locator('article').filter({ hasText: original }).last();
+  await row.hover();
+  await row.getByRole('button', { name: 'Quote', exact: true }).click();
+  await expect(page.getByText(/^Quoting /)).toBeVisible();
+
+  await composer.press('Escape');
+  await expect(page.getByText(/^Quoting /)).toBeHidden();
+});

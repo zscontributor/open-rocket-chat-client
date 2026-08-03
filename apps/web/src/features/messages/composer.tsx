@@ -1,3 +1,6 @@
+// Aliased: `format` is taken inside the component by the one that applies a
+// formatting mark to the draft.
+import { format as formatDate } from 'date-fns';
 import { useEffect, useId, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -24,6 +27,7 @@ import { fetchGifFile, type GiphyGif } from './giphy';
 import { longMessageFile } from './long-message';
 import { LongMessageConfirm } from './long-message-confirm';
 import { MessageBody } from './message-body';
+import { quotedText, QUOTE_STAMP_FORMAT } from './quote';
 import {
   canConvertLongMessage,
   canEditMessage,
@@ -84,6 +88,9 @@ export const Composer = ({
 }) => {
   const { t } = useTranslation('composer');
   const { t: tCommon } = useTranslation('common');
+  // The quote bar counts the original's uploads, and the timeline already has
+  // the phrase for that — one wording for one thing, in every language.
+  const { t: tMessages } = useTranslation('messages');
   const send = useSendMessage(roomId);
   const edit = useEditMessage(roomId);
   const upload = useUploadFile(roomId);
@@ -116,6 +123,12 @@ export const Composer = ({
   const startEditing = useUiStore((state) => state.startEditingMessage);
   // A message being edited belongs to the room it was opened in.
   const editing = pending?.roomId === roomId ? pending : null;
+
+  // Quotes are raised from the timeline's hover toolbar, which only the main
+  // pane draws — so, as with editing, the thread box must not answer for one.
+  const pendingQuote = useUiStore((state) => (threadId ? null : state.quotedMessage));
+  const stopQuoting = useUiStore((state) => state.stopQuotingMessage);
+  const quoting = pendingQuote?.roomId === roomId ? pendingQuote : null;
 
   // Thread replies get their own draft slot so switching panes cannot lose text,
   // and so does an edit — it borrows the box without disturbing what was typed.
@@ -249,6 +262,40 @@ export const Composer = ({
     textarea.current?.focus();
   };
 
+  /**
+   * The message as it will be posted: the quote first, then what was typed.
+   *
+   * A function rather than a value so the preview and the send agree by
+   * construction — the panel above the box is showing the message, not an
+   * approximation of it.
+   */
+  const composed = (body: string): string =>
+    quoting
+      ? quotedText(
+          { author: quoting.author, postedAt: formatDate(new Date(quoting.postedAt), QUOTE_STAMP_FORMAT) },
+          quoting.text,
+          body,
+        )
+      : body;
+
+  /** Drops the staged quote; the draft under it is left alone. */
+  const cancelQuote = () => {
+    stopQuoting();
+    textarea.current?.focus();
+  };
+
+  // Quoting is started from the timeline, so the box it stages the quote above
+  // is somewhere else on the screen — the caret has to follow the action there,
+  // or the user's next keystroke goes nowhere.
+  const quotingId = quoting?.messageId;
+  useEffect(() => {
+    const element = textarea.current;
+    if (!quotingId || !element) return;
+
+    element.focus();
+    element.setSelectionRange(element.value.length, element.value.length);
+  }, [quotingId]);
+
   // Starting an edit should land the caret in the box, at the end of the text —
   // the point of moving editing down here is that it behaves like typing.
   const editingId = editing?.messageId;
@@ -266,6 +313,10 @@ export const Composer = ({
    */
   const submit = async ({ asAttachment = false }: { asAttachment?: boolean } = {}) => {
     const text = draft.trim();
+    // What actually goes over the wire. Everything below measures and sends
+    // this rather than the draft: the quote is part of the message, and a
+    // server that refuses it for its length refuses the whole thing.
+    const outgoing = composed(text);
     const staged = attachments.attachments.filter((item) => item.status !== 'rejected');
 
     if (isSending) return;
@@ -285,7 +336,7 @@ export const Composer = ({
      * would refuse is excluded too: that submit stops below either way, and
      * asking about the draft's length first would answer the wrong question.
      */
-    const overLimit = text.length > maxLength && !attachments.hasBlocking;
+    const overLimit = outgoing.length > maxLength && !attachments.hasBlocking;
     const convertsToFile = overLimit && !editing && longMessagesConvert;
 
     if (overLimit && !convertsToFile) {
@@ -322,7 +373,9 @@ export const Composer = ({
       return;
     }
 
-    if ((!text && staged.length === 0) || attachments.hasBlocking) return;
+    // A quote on its own is a message — "this", pointed at what somebody said —
+    // so an empty box below one is not the empty submit that stops here.
+    if ((!text && staged.length === 0 && !quoting) || attachments.hasBlocking) return;
 
     /*
      * A draft naming a command the server knows is run rather than sent.
@@ -332,8 +385,12 @@ export const Composer = ({
      * merely starts with a slash. And only when the server knows the command:
      * `/etc/hosts is where it lives` is a sentence, and posting it as one beats
      * refusing it over a command nobody meant to type.
+     *
+     * A quote rules it out for the same reason a file does: there is nowhere to
+     * put the quoted message in a command, so a draft written under one is a
+     * message however it begins.
      */
-    const command = staged.length === 0 && !convertsToFile ? parseSlashCommand(text) : null;
+    const command = staged.length === 0 && !convertsToFile && !quoting ? parseSlashCommand(text) : null;
     const matchedCommand = command ? slashCommands?.find((entry) => entry.command === command.command) : undefined;
     const isKnownCommand = Boolean(matchedCommand);
 
@@ -355,7 +412,7 @@ export const Composer = ({
           ...(threadId ? { threadId } : {}),
         });
       } else if (staged.length === 0 && !convertsToFile) {
-        await send.mutateAsync({ text, ...(threadId ? { threadId } : {}) });
+        await send.mutateAsync({ text: outgoing, ...(threadId ? { threadId } : {}) });
       } else {
         // Rocket.Chat's upload endpoint takes one file per request, so the
         // composer text rides along with the first file as its message and the
@@ -367,7 +424,7 @@ export const Composer = ({
         // and, being a file now, it never rides along as another one's text.
         if (convertsToFile) {
           await upload.mutateAsync({
-            file: longMessageFile(text, user.username, new Date()),
+            file: longMessageFile(outgoing, user.username, new Date()),
             ...(threadId ? { threadId } : {}),
           });
           uploaded += 1;
@@ -390,7 +447,7 @@ export const Composer = ({
               ...(item.caption ? { description: item.caption } : {}),
               // The text belongs to the first file that actually goes up, not
               // to whichever one was first before the removals.
-              ...(uploaded === 0 && text ? { text } : {}),
+              ...(uploaded === 0 && outgoing ? { text: outgoing } : {}),
               ...(threadId ? { threadId } : {}),
             });
             uploaded += 1;
@@ -414,6 +471,10 @@ export const Composer = ({
 
       clearDraft(draftKey);
       attachments.clear();
+      // Only ever this room's: `quoting` is already narrowed to it, and the
+      // slot is a single one shared with whatever other room may be holding a
+      // quote of its own.
+      if (quoting) stopQuoting();
     } catch (submitError) {
       // The draft is deliberately left in place: losing what somebody typed is
       // worse than making them press send again.
@@ -730,6 +791,14 @@ export const Composer = ({
       return;
     }
 
+    // The same key drops a staged quote — the two never coexist, so there is
+    // no order to get wrong.
+    if (event.key === 'Escape' && quoting) {
+      event.preventDefault();
+      cancelQuote();
+      return;
+    }
+
     /*
      * ↑ reopens your last message, as it does in Rocket.Chat — but only from an
      * empty box, and only when nothing is being edited already. With text in it
@@ -763,7 +832,7 @@ export const Composer = ({
    */
   const canSend = editing
     ? draft.trim().length > 0
-    : (draft.trim().length > 0 || attachments.attachments.length > 0) && !attachments.hasBlocking;
+    : (draft.trim().length > 0 || attachments.attachments.length > 0 || Boolean(quoting)) && !attachments.hasBlocking;
   const heightBounds = composerBounds(window.innerHeight);
 
   // Which key does what is now the user's choice, so the hint has to be read
@@ -839,6 +908,30 @@ export const Composer = ({
         </div>
       ) : null}
 
+      {quoting ? (
+        // The same left rule the timeline draws down a blockquote, so the strip
+        // is recognisable as the thing it is about to post.
+        <div className="border-line border-l-accent bg-raised mb-2 flex items-center gap-2 rounded-lg border border-l-2 px-3 py-1.5">
+          <Icons.quote size={14} className="text-accent shrink-0" />
+          <p className="min-w-0 flex-1 truncate text-xs">
+            <span className="text-accent font-semibold">{t('quoting.label', { name: quoting.author })}</span>{' '}
+            <span className="text-content-muted">
+              {quoting.text.trim() ||
+                (quoting.fileCount > 0 ? tMessages('attachments', { count: quoting.fileCount }) : t('quoting.noText'))}
+            </span>
+          </p>
+          <button
+            type="button"
+            aria-label={t('quoting.cancel')}
+            title={t('quoting.cancel')}
+            onClick={cancelQuote}
+            className="text-content-muted hover:bg-sunken hover:text-content shrink-0 rounded p-0.5 transition-colors"
+          >
+            <Icons.close size={14} />
+          </button>
+        </div>
+      ) : null}
+
       <AttachmentTray
         attachments={attachments.attachments}
         mediaItems={attachments.mediaItems}
@@ -856,11 +949,11 @@ export const Composer = ({
 
           {/* The same renderer the timeline uses, so this is not an
               approximation of the sent message — it is the sent message. */}
-          {draft.trim() ? (
+          {draft.trim() || quoting ? (
             // Capped so a long draft cannot push the box it is previewing off
             // the bottom of the screen.
             <MessageBody
-              text={draft}
+              text={composed(draft)}
               // Nothing has been posted, so there is no server verdict on which
               // names are mentions — the preview shows what they are about to
               // become rather than nothing at all.
@@ -986,6 +1079,34 @@ export const Composer = ({
           />
         ) : (
           <div className="flex items-center gap-0.5 px-2 pb-2">
+            <EmojiPicker
+              onSelect={insertEmoji}
+              trigger={
+                <button
+                  type="button"
+                  aria-label={t('action.emoji')}
+                  title={t('action.emoji')}
+                  disabled={disabled}
+                  className="text-content-muted hover:bg-sunken hover:text-content flex size-8 items-center justify-center rounded-md transition-colors disabled:opacity-40"
+                >
+                  <Icons.emoji size={18} />
+                </button>
+              }
+            />
+            <GifPicker
+              onSelect={attachGif}
+              trigger={
+                <button
+                  type="button"
+                  aria-label={t('action.gif')}
+                  title={t('action.gif')}
+                  disabled={disabled || Boolean(editing)}
+                  className="text-content-muted hover:bg-sunken hover:text-content flex size-8 items-center justify-center rounded-md transition-colors disabled:opacity-40"
+                >
+                  <Icons.gif size={18} />
+                </button>
+              }
+            />
             {uploadsAllowed ? (
               <ToolbarButton
                 label={t('action.attachFiles')}
@@ -1017,34 +1138,6 @@ export const Composer = ({
                   className="text-content-muted hover:bg-sunken hover:text-content flex size-8 items-center justify-center rounded-md transition-colors disabled:opacity-40"
                 >
                   <Icons.formatting size={18} />
-                </button>
-              }
-            />
-            <EmojiPicker
-              onSelect={insertEmoji}
-              trigger={
-                <button
-                  type="button"
-                  aria-label={t('action.emoji')}
-                  title={t('action.emoji')}
-                  disabled={disabled}
-                  className="text-content-muted hover:bg-sunken hover:text-content flex size-8 items-center justify-center rounded-md transition-colors disabled:opacity-40"
-                >
-                  <Icons.emoji size={18} />
-                </button>
-              }
-            />
-            <GifPicker
-              onSelect={attachGif}
-              trigger={
-                <button
-                  type="button"
-                  aria-label={t('action.gif')}
-                  title={t('action.gif')}
-                  disabled={disabled || Boolean(editing)}
-                  className="text-content-muted hover:bg-sunken hover:text-content flex size-8 items-center justify-center rounded-md transition-colors disabled:opacity-40"
-                >
-                  <Icons.gif size={18} />
                 </button>
               }
             />

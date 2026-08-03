@@ -3,6 +3,11 @@
   "beginning": "Đây là điểm bắt đầu của cuộc trò chuyện.",
   "loadingOlder": "Đang tải tin nhắn cũ hơn…",
   "loading": "Đang tải tin nhắn…",
+  "jumpToRecent": "Về tin mới nhất",
+  "jump": {
+    "tooFarBack": "Tin nhắn đó nằm xa hơn phần lịch sử mà dòng thời gian tải được.",
+    "missing": "Không còn thấy tin nhắn đó trong cuộc trò chuyện này."
+  },
   "edited": "đã sửa",
   "encrypted": "Tin nhắn này được mã hoá đầu cuối nên không hiển thị được.",
   "mention": {
@@ -24,6 +29,8 @@
   "action": {
     "addReaction": "Thêm biểu cảm",
     "replyInThread": "Trả lời trong luồng",
+    "quote": "Trích dẫn",
+    "forward": "Chuyển tiếp",
     "star": "Đánh dấu sao",
     "unstar": "Bỏ đánh dấu sao",
     "pin": "Ghim",
@@ -33,6 +40,22 @@
     "copied": "Đã sao chép",
     "delete": "Xoá tin nhắn",
     "copyLink": "Sao chép liên kết"
+  },
+  "forward": {
+    "title": "Chuyển tiếp tin nhắn",
+    "detail": "Chọn những phòng cần gửi tới.",
+    "search": "Tìm phòng",
+    "searchPlaceholder": "Tìm phòng…",
+    "rooms": "Phòng",
+    "roomsFailed": "Không tải được danh sách phòng.",
+    "noRooms": "Không có phòng nào bạn có thể gửi tin nhắn.",
+    "noMatches": "Không có phòng nào khớp với “{{query}}”.",
+    "comment": "Thêm ghi chú",
+    "commentPlaceholder": "Thêm ghi chú (không bắt buộc)",
+    "selected_other": "Đã chọn {{count}} phòng",
+    "submit": "Chuyển tiếp",
+    "sent_other": "Đã chuyển tiếp tới {{count}} phòng",
+    "failed": "Không chuyển tiếp được tới {{rooms}}."
   },
   "typing": {
     "one": "{{name}} đang soạn tin…",

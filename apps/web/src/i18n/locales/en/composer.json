@@ -33,6 +33,11 @@
     "noText": "(no text)",
     "cancel": "Stop editing"
   },
+  "quoting": {
+    "label": "Quoting {{name}}:",
+    "noText": "(no text)",
+    "cancel": "Remove the quote"
+  },
   "enterToSend": {
     "label": "Enter to send"
   },

@@ -6,6 +6,7 @@ import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/cn';
 import { remarkCodeFence } from './code-fence';
 import { CUSTOM_EMOJI_CLASS, makeRemarkEmoji } from './emoji';
+import { makeRemarkHighlight } from './highlight';
 import { remarkLineBreaks } from './line-breaks';
 import { MentionChip } from './mention-chip';
 import { makeRemarkMentions, MENTION_CLASS, messageMentionResolver, type MentionKind } from './mentions';
@@ -19,9 +20,14 @@ import { useEmojiIndex } from './use-emoji';
  * Kept as a constant rather than inline so the timeline and the composer's
  * preview cannot drift apart — the whole point of the preview is that what it
  * shows is what the room will show.
+ *
+ * `mark` is styled here rather than left to the browser: the default black on
+ * yellow is close to right, but it is one flat pair for both colour schemes,
+ * and on a dark panel it reads as a hole punched in the page. The two schemes
+ * get a yellow each, in `styles.css` beside the syntax colours.
  */
 const PROSE =
-  '[&_a]:text-link [&_a]:underline [&_blockquote]:border-line [&_blockquote]:text-content-muted [&_blockquote]:my-1 [&_blockquote]:border-l-2 [&_blockquote]:pl-3 [&_code]:bg-sunken [&_code]:rounded [&_code]:px-1 [&_code]:py-0.5 [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_ol]:my-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-0 [&_pre]:bg-sunken [&_pre]:my-1 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:p-3 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_table]:my-1 [&_td]:border-line [&_td]:border [&_td]:px-2 [&_td]:py-1 [&_th]:border-line [&_th]:border [&_th]:px-2 [&_th]:py-1 [&_u]:underline [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-5';
+  '[&_a]:text-link [&_a]:underline [&_blockquote]:border-line [&_blockquote]:text-content-muted [&_blockquote]:my-1 [&_blockquote]:border-l-2 [&_blockquote]:pl-3 [&_code]:bg-sunken [&_code]:rounded [&_code]:px-1 [&_code]:py-0.5 [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_mark]:bg-marked [&_mark]:text-marked-content [&_mark]:rounded-sm [&_mark]:px-0.5 [&_mark]:font-medium [&_ol]:my-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-0 [&_pre]:bg-sunken [&_pre]:my-1 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:p-3 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_table]:my-1 [&_td]:border-line [&_td]:border [&_td]:px-2 [&_td]:py-1 [&_th]:border-line [&_th]:border [&_th]:px-2 [&_th]:py-1 [&_u]:underline [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-5';
 
 /** Shared, so a body with no code block hands react-markdown the same empty list. */
 const NO_REHYPE_PLUGINS: Options['rehypePlugins'] = [];
@@ -87,6 +93,7 @@ export const MessageBody = ({
   mentions,
   channels,
   assumeMentions,
+  highlight,
   onOpenRoom,
   className,
 }: {
@@ -105,6 +112,12 @@ export const MessageBody = ({
    * check it against yet.
    */
   assumeMentions?: boolean;
+  /**
+   * Terms to mark wherever they appear, for a body shown as a search result.
+   * Empty or absent everywhere else, which is every other place text is read
+   * rather than scanned.
+   */
+  highlight?: readonly string[];
   onOpenRoom?: (roomId: string) => void;
   className?: string;
 }) => {
@@ -122,15 +135,18 @@ export const MessageBody = ({
       makeRemarkUnderline,
       makeRemarkMentions(messageMentionResolver(mentions, channels, assumeMentions)),
       makeRemarkEmoji(resolve),
+      // Between the transforms that match within a run of text and the one that
+      // cuts those runs into lines — see the note on the plugin itself.
+      ...(highlight && highlight.length > 0 ? [makeRemarkHighlight(highlight)] : []),
       remarkLineBreaks,
     ],
-    [resolve, mentions, channels, assumeMentions],
+    [resolve, mentions, channels, assumeMentions, highlight],
   );
 
   // Fetched only for a body that has a block to colour, and only once per tab.
-  const highlight = useCodeHighlighter(hasCodeBlock(text));
+  const colourCode = useCodeHighlighter(hasCodeBlock(text));
 
-  const rehypePlugins = useMemo(() => (highlight ? [highlight] : NO_REHYPE_PLUGINS), [highlight]);
+  const rehypePlugins = useMemo(() => (colourCode ? [colourCode] : NO_REHYPE_PLUGINS), [colourCode]);
 
   const components = useMemo(() => buildComponents(onOpenRoom), [onOpenRoom]);
 

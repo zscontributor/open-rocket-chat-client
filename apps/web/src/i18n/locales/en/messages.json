@@ -3,6 +3,11 @@
   "beginning": "This is the beginning of the conversation.",
   "loadingOlder": "Loading older messages…",
   "loading": "Loading messages…",
+  "jumpToRecent": "Jump to recent",
+  "jump": {
+    "tooFarBack": "That message is further back than the timeline will load.",
+    "missing": "That message is no longer in this conversation."
+  },
   "edited": "edited",
   "encrypted": "This message is end-to-end encrypted and cannot be shown.",
   "mention": {
@@ -24,6 +29,8 @@
   "action": {
     "addReaction": "Add reaction",
     "replyInThread": "Reply in thread",
+    "quote": "Quote",
+    "forward": "Forward",
     "star": "Star",
     "unstar": "Remove star",
     "pin": "Pin",
@@ -33,6 +40,24 @@
     "copied": "Copied",
     "delete": "Delete message",
     "copyLink": "Copy link"
+  },
+  "forward": {
+    "title": "Forward message",
+    "detail": "Pick the rooms it should be sent to.",
+    "search": "Search rooms",
+    "searchPlaceholder": "Search rooms…",
+    "rooms": "Rooms",
+    "roomsFailed": "The room list could not be loaded.",
+    "noRooms": "There are no rooms you can post to.",
+    "noMatches": "No rooms match “{{query}}”.",
+    "comment": "Add a comment",
+    "commentPlaceholder": "Add a comment (optional)",
+    "selected_one": "{{count}} room selected",
+    "selected_other": "{{count}} rooms selected",
+    "submit": "Forward",
+    "sent_one": "Forwarded to {{count}} room",
+    "sent_other": "Forwarded to {{count}} rooms",
+    "failed": "Could not forward to {{rooms}}."
   },
   "typing": {
     "one": "{{name}} is typing…",

@@ -33,6 +33,11 @@
     "noText": "（テキストなし）",
     "cancel": "編集を中止"
   },
+  "quoting": {
+    "label": "{{name}} を引用:",
+    "noText": "（テキストなし）",
+    "cancel": "引用を取り消す"
+  },
   "enterToSend": {
     "label": "Enter で送信"
   },
