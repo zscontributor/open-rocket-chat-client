@@ -318,7 +318,7 @@ const Panel = ({
     case 'thread':
       return <ThreadPanel roomId={roomId} threadId={tab.messageId} onOpenRoom={onOpenRoom} />;
     case 'search':
-      return <SearchPanel roomId={roomId} />;
+      return <SearchPanel roomId={roomId} initialTerm={tab.term} initialScrollTop={tab.scrollTop} />;
     case 'notifications':
       return <NotificationsPanel roomId={roomId} />;
     case 'prune':

@@ -1,5 +1,5 @@
 import type { Message } from '@open-rocket-chat/client-sdk';
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { searchTerms } from '@/features/messages/highlight';
@@ -17,20 +17,45 @@ import { useDebounced, useMessageSearch } from '../use-panels';
  * `from:alice`, `has:star`, `is:pinned`, `before:2024-01-01` — and the term is
  * passed through untouched so they keep working here.
  */
-export const SearchPanel = ({ roomId }: { roomId: string }) => {
+export const SearchPanel = ({
+  roomId,
+  initialTerm = '',
+  initialScrollTop = 0,
+}: {
+  roomId: string;
+  /** What the panel was showing before a result was opened from it, if it was. */
+  initialTerm?: string;
+  initialScrollTop?: number;
+}) => {
   const { t } = useTranslation('rooms');
 
   // Pushed, so a thread opened from a result can come back to the results —
   // re-running a search you had already typed is the alternative.
   const push = useContextualBarStore((state) => state.push);
   const closeBar = useContextualBarStore((state) => state.close);
+  const rememberSearch = useContextualBarStore((state) => state.rememberSearch);
   const barOverlays = useContextualBarOverlay();
   const jumpTo = useJumpStore((state) => state.jumpTo);
-  const [term, setTerm] = useState('');
+  const [term, setTerm] = useState(initialTerm);
+  // The debounce starts settled on whatever it is given, so a restored term is
+  // queried on the very first render rather than 350ms into it — and that query
+  // has already been answered, so the rows are back before the panel is drawn.
   const debouncedTerm = useDebounced(term);
+  const bodyRef = useRef<HTMLDivElement>(null);
 
   const search = useMessageSearch(roomId, debouncedTerm);
   const results = search.data ?? [];
+
+  // Put back where the list was left, which needs the list: rows render from
+  // the cache on the first paint after a back, but a search whose answer has
+  // since been dropped has to arrive before there is anything to scroll.
+  // Once, so scrolling away and loading a further page does not snap back.
+  const restored = useRef(initialScrollTop === 0);
+  useLayoutEffect(() => {
+    if (restored.current || results.length === 0) return;
+    restored.current = true;
+    if (bodyRef.current) bodyRef.current.scrollTop = initialScrollTop;
+  }, [results.length, initialScrollTop]);
 
   // Taken from the debounced term rather than the typed one, so the marks match
   // the results on screen instead of a search still being typed. Held steady
@@ -46,6 +71,9 @@ export const SearchPanel = ({ roomId }: { roomId: string }) => {
    */
   const openResult = (message: Message) => {
     if (message.threadId) {
+      // Handed to the stack before drilling in, since this panel is about to be
+      // unmounted and its term and scroll position go with it.
+      rememberSearch({ term, scrollTop: bodyRef.current?.scrollTop ?? 0 });
       push({ id: 'thread', messageId: message.threadId });
       return;
     }
@@ -65,7 +93,7 @@ export const SearchPanel = ({ roomId }: { roomId: string }) => {
         <p className="text-content-muted text-[11px]">{t('search.operatorsHint')}</p>
       </PanelToolbar>
 
-      <PanelBody>
+      <PanelBody ref={bodyRef}>
         {debouncedTerm.trim().length === 0 ? (
           <p className="text-content-muted px-4 py-10 text-center text-sm">{t('search.hint')}</p>
         ) : (

@@ -22,7 +22,12 @@ export type ContextualTab =
   | { id: 'mentions' }
   | { id: 'threads' }
   | { id: 'thread'; messageId: string }
-  | { id: 'search' }
+  /**
+   * The term and scroll offset ride along with the tab so a result opened from
+   * the list can be backed out of into the same list. They are the panel's own
+   * state everywhere else — only leaving it and coming back needs them here.
+   */
+  | { id: 'search'; term?: string; scrollTop?: number }
   | { id: 'notifications' }
   | { id: 'prune' }
   | { id: 'shortcuts' };
@@ -49,6 +54,14 @@ interface ContextualBarStore {
   push: (tab: ContextualTab) => void;
   back: () => void;
   close: () => void;
+  /**
+   * Writes the search panel's list back onto its own stack entry.
+   *
+   * Called as a result is opened, while the panel is still what is on screen:
+   * drilling in unmounts it, and without this the back button lands on an empty
+   * search box that has thrown away the query it was showing a moment ago.
+   */
+  rememberSearch: (view: { term: string; scrollTop: number }) => void;
 }
 
 /** True when the two tabs address the same panel and the same subject. */
@@ -94,6 +107,18 @@ export const useContextualBarStore = create<ContextualBarStore>((set, get) => ({
   back: () => set((state) => ({ stack: state.stack.slice(0, -1) })),
 
   close: () => set({ stack: [] }),
+
+  rememberSearch: (view) =>
+    set((state) => {
+      const index = state.stack.length - 1;
+      // Nothing to remember once the panel is no longer the one on screen —
+      // a closed bar or a different tab is a search the user has left behind.
+      if (state.stack[index]?.id !== 'search') return state;
+
+      const stack = [...state.stack];
+      stack[index] = { id: 'search', ...view };
+      return { stack };
+    }),
 }));
 
 /** The panel on screen, or `null` when the bar is closed. */
