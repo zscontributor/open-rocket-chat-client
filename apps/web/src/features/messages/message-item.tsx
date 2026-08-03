@@ -16,6 +16,7 @@ import { Icons } from '@/ui/icon';
 import { isBareBlock } from './body-shape';
 import { EmojiPicker } from './emoji-picker';
 import { EmojiText } from './emoji-text';
+import { ForwardDialog } from './forward-dialog';
 import { MessageBody } from './message-body';
 import { mergeReactions } from './message-rows';
 import { PinnedQuote } from './pinned-quote';
@@ -118,6 +119,9 @@ export const MessageItem = ({
   // it. Hiding it while the picker is open would strip the popover of its
   // anchor, so pin it open for as long as the picker is.
   const [pickerOpen, setPickerOpen] = useState(false);
+  // Mounted only while it is open: the dialog asks for the room list, and a
+  // timeline of a hundred rows should not ask a hundred times over.
+  const [forwarding, setForwarding] = useState(false);
   // A copy leaves no trace on the page, so the button reports its own success
   // for a moment. There is no toast surface in the client to defer this to.
   const [copied, setCopied] = useState(false);
@@ -190,6 +194,11 @@ export const MessageItem = ({
   // encrypted one holds ciphertext the client has not opened — copying that
   // would hand the user a blob of base64 where they expected their sentence.
   const canCopy = !message.encrypted && message.text.trim().length > 0;
+
+  // An end-to-end encrypted message is ciphertext this client never opened, and
+  // the room it would be forwarded to holds a different key — the quote would
+  // arrive as a blob of base64 nobody there can read.
+  const canForward = !message.encrypted;
 
   return (
     <article
@@ -515,6 +524,12 @@ export const MessageItem = ({
                 </ActionButton>
               ) : null}
 
+              {canForward ? (
+                <ActionButton label={t('action.forward')} onClick={() => setForwarding(true)}>
+                  <Icons.forward size={16} />
+                </ActionButton>
+              ) : null}
+
               {abilities.star ? (
                 <ActionButton label={starred ? t('action.unstar') : t('action.star')} onClick={() => onStar(!starred)}>
                   <Icons.star size={16} weight={starred ? 'fill' : 'light'} />
@@ -558,6 +573,8 @@ export const MessageItem = ({
           </div>
         </div>
       </div>
+
+      {forwarding ? <ForwardDialog messages={messages} onClose={() => setForwarding(false)} /> : null}
     </article>
   );
 };

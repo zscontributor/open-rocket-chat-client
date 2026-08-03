@@ -25,6 +25,7 @@
   "action": {
     "addReaction": "Thêm biểu cảm",
     "replyInThread": "Trả lời trong luồng",
+    "forward": "Chuyển tiếp",
     "star": "Đánh dấu sao",
     "unstar": "Bỏ đánh dấu sao",
     "pin": "Ghim",
@@ -34,6 +35,22 @@
     "copied": "Đã sao chép",
     "delete": "Xoá tin nhắn",
     "copyLink": "Sao chép liên kết"
+  },
+  "forward": {
+    "title": "Chuyển tiếp tin nhắn",
+    "detail": "Chọn những phòng cần gửi tới.",
+    "search": "Tìm phòng",
+    "searchPlaceholder": "Tìm phòng…",
+    "rooms": "Phòng",
+    "roomsFailed": "Không tải được danh sách phòng.",
+    "noRooms": "Không có phòng nào bạn có thể gửi tin nhắn.",
+    "noMatches": "Không có phòng nào khớp với “{{query}}”.",
+    "comment": "Thêm ghi chú",
+    "commentPlaceholder": "Thêm ghi chú (không bắt buộc)",
+    "selected_other": "Đã chọn {{count}} phòng",
+    "submit": "Chuyển tiếp",
+    "sent_other": "Đã chuyển tiếp tới {{count}} phòng",
+    "failed": "Không chuyển tiếp được tới {{rooms}}."
   },
   "typing": {
     "one": "{{name}} đang soạn tin…",
