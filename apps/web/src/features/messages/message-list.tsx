@@ -9,6 +9,7 @@ import {
   canDeleteMessage,
   canEditMessage,
   canPinMessage,
+  canPostToRoom,
   canReact,
   canStarMessage,
   canUseThreads,
@@ -137,6 +138,9 @@ export const MessageList = ({
       star: canStarMessage(capabilities),
       react: canReact(capabilities, room),
       thread: canUseThreads(capabilities),
+      // Quoting writes a new message, so it is gated on the same check that
+      // decides whether the box below the timeline takes one.
+      quote: canPostToRoom(capabilities, room),
       showEditedStatus: capabilities?.settings.message.showEditedStatus ?? true,
     }),
     [capabilities, room],

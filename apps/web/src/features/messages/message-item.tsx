@@ -34,6 +34,11 @@ export interface MessageAbilities {
   star: boolean;
   react: boolean;
   thread: boolean;
+  /**
+   * Whether the room takes new messages at all. A quote is one, so there is no
+   * point offering it in a room the composer below is disabled in.
+   */
+  quote: boolean;
   /** `Message_ShowEditedStatus`; some servers hide the marker entirely. */
   showEditedStatus: boolean;
 }
@@ -113,6 +118,7 @@ export const MessageItem = ({
   const client = useClient();
   const message = messages[0];
   const startEditing = useUiStore((state) => state.startEditingMessage);
+  const startQuoting = useUiStore((state) => state.startQuotingMessage);
   const isEditing = useUiStore((state) => state.editingMessage?.messageId === message.id);
   const openViewer = useMediaStore((state) => state.open);
   // The toolbar is hover-only, but the emoji picker anchors to a button inside
@@ -200,6 +206,14 @@ export const MessageItem = ({
   // arrive as a blob of base64 nobody there can read.
   const canForward = !message.encrypted;
 
+  // Same reason, one room closer to home: quoting posts the original as text,
+  // and the text of an encrypted message is ciphertext. Posting it back into
+  // the room it came from would be unreadable there too.
+  const canQuote = abilities.quote && !message.encrypted;
+
+  // The name the reader saw, so the quote names whoever the timeline named.
+  const author = message.senderAlias ?? message.sender.displayName;
+
   return (
     <article
       className={cn(
@@ -251,9 +265,7 @@ export const MessageItem = ({
             <div className={cn('mb-1 flex items-baseline gap-2 px-1', isOwn && 'flex-row-reverse')}>
               {/* Naming yourself on your own messages is noise — the side they
                   sit on already says it. */}
-              {isOwn ? null : (
-                <span className="text-sm font-semibold">{message.senderAlias ?? message.sender.displayName}</span>
-              )}
+              {isOwn ? null : <span className="text-sm font-semibold">{author}</span>}
               <time dateTime={message.createdAt} className="text-content-muted text-[11px]">
                 {format(new Date(message.createdAt), 'HH:mm')}
               </time>
@@ -521,6 +533,26 @@ export const MessageItem = ({
               {abilities.thread ? (
                 <ActionButton label={t('action.replyInThread')} onClick={onOpenThread}>
                   <Icons.threads size={16} />
+                </ActionButton>
+              ) : null}
+
+              {canQuote ? (
+                <ActionButton
+                  label={t('action.quote')}
+                  onClick={() =>
+                    startQuoting({
+                      roomId: message.roomId,
+                      messageId: message.id,
+                      author,
+                      postedAt: message.createdAt,
+                      text: message.text,
+                      // The whole row: an album posts as several messages, and
+                      // the reader quoting it saw one.
+                      fileCount: mediaItems.length,
+                    })
+                  }
+                >
+                  <Icons.quote size={16} />
                 </ActionButton>
               ) : null}
 

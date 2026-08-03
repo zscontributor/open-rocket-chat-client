@@ -13,18 +13,10 @@ import { Avatar } from '@/ui/avatar';
 import { Button } from '@/ui/button';
 import { Icons, Spinner } from '@/ui/icon';
 import { Input } from '@/ui/input';
-import { forwardedFiles, forwardedText } from './forward';
+import { forwardedFiles } from './forward';
 import { MessageBody } from './message-body';
+import { quotedText, QUOTE_STAMP_FORMAT } from './quote';
 import { useForwardMessage } from './use-forward-message';
-
-/**
- * The stamp above the quote.
- *
- * Longer than the `HH:mm` the timeline prints beside a message: a forward
- * usually crosses a day, and the room it lands in has no date separator
- * overhead to read the rest of the date from.
- */
-const ATTRIBUTION_FORMAT = 'd MMM yyyy, HH:mm';
 
 const RoomRow = ({ room, selected, onToggle }: { room: RoomSummary; selected: boolean; onToggle: () => void }) => {
   const peer = room.directMembers[0];
@@ -104,8 +96,8 @@ export const ForwardDialog = ({ messages, onClose }: { messages: [Message, ...Me
     );
 
   const submit = () => {
-    const text = forwardedText(
-      { author, postedAt: format(new Date(message.createdAt), ATTRIBUTION_FORMAT) },
+    const text = quotedText(
+      { author, postedAt: format(new Date(message.createdAt), QUOTE_STAMP_FORMAT) },
       message.text,
       comment,
     );
@@ -147,7 +139,7 @@ export const ForwardDialog = ({ messages, onClose }: { messages: [Message, ...Me
               <Avatar name={author} src={message.sender.avatarUrl} size="xs" />
               <span className="min-w-0 truncate text-xs font-semibold">{author}</span>
               <time dateTime={message.createdAt} className="text-content-muted shrink-0 text-[10px] tabular-nums">
-                {format(new Date(message.createdAt), ATTRIBUTION_FORMAT)}
+                {format(new Date(message.createdAt), QUOTE_STAMP_FORMAT)}
               </time>
             </div>
 
