@@ -3,6 +3,7 @@
   "beginning": "This is the beginning of the conversation.",
   "loadingOlder": "Loading older messages…",
   "loading": "Loading messages…",
+  "jumpToRecent": "Jump to recent",
   "edited": "edited",
   "encrypted": "This message is end-to-end encrypted and cannot be shown.",
   "mention": {
