@@ -50,6 +50,7 @@ import {
   Plus,
   PlugsConnected,
   PushPin,
+  Quotes,
   SignOut,
   SmileyIcon,
   SpinnerGap,
@@ -191,6 +192,9 @@ export const Icons = {
   pin: PushPin,
   preview: Eye,
   private: Lock,
+  // The quotation marks, not a bent arrow: the arrows are taken by forwarding
+  // and by replying in a thread, and a quote is neither of those.
+  quote: Quotes,
   search: MagnifyingGlass,
   send: PaperPlaneTilt,
   settings: Gear,

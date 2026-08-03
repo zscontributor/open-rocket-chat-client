@@ -29,6 +29,7 @@
   "action": {
     "addReaction": "Thêm biểu cảm",
     "replyInThread": "Trả lời trong luồng",
+    "quote": "Trích dẫn",
     "forward": "Chuyển tiếp",
     "star": "Đánh dấu sao",
     "unstar": "Bỏ đánh dấu sao",

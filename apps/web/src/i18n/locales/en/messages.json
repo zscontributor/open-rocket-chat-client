@@ -29,6 +29,7 @@
   "action": {
     "addReaction": "Add reaction",
     "replyInThread": "Reply in thread",
+    "quote": "Quote",
     "forward": "Forward",
     "star": "Star",
     "unstar": "Remove star",

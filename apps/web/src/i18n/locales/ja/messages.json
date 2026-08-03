@@ -29,6 +29,7 @@
   "action": {
     "addReaction": "リアクションを追加",
     "replyInThread": "スレッドで返信",
+    "quote": "引用",
     "forward": "転送",
     "star": "スターを付ける",
     "unstar": "スターを外す",
