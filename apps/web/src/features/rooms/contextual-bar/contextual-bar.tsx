@@ -7,7 +7,7 @@ import { useThreadMessages } from '@/features/messages/use-messages';
 import { useUiStore } from '@/stores/ui-store';
 import { Icons, type IconName } from '@/ui/icon';
 import { ResizeHandle } from '@/ui/resize-handle';
-import { contextualBarBounds, contextualBarOverlays, layoutWidth, SIDEBAR_RAIL_WIDTH } from '@/lib/resize';
+import { contextualBarBounds, layoutWidth, SIDEBAR_RAIL_WIDTH } from '@/lib/resize';
 import { RoomEditForm } from '../room-edit-form';
 import { AddMembersPanel } from './panels/add-members-panel';
 import { FilesPanel } from './panels/files-panel';
@@ -21,7 +21,7 @@ import { ShortcutsPanel } from './panels/shortcuts-panel';
 import { ThreadPanel } from './panels/thread-panel';
 import { ThreadsPanel } from './panels/threads-panel';
 import { UserInfoPanel } from './panels/user-info-panel';
-import { useContextualBarStore, type ContextualTab } from './store';
+import { useContextualBarOverlay, useContextualBarStore, type ContextualTab } from './store';
 
 /**
  * How long the bar takes to slide shut — the sidebar's `duration-200`, in the
@@ -63,23 +63,6 @@ const ThreadSubtitle = ({ roomId, threadId }: { roomId: string; threadId: string
 
   if (!parent) return null;
   return <>{t('thread.replyingTo', { name: parent.sender.displayName })}</>;
-};
-
-/**
- * Whether the bar is laid out over the conversation rather than beside it.
- *
- * Exported because the conversation has to know as well: while a panel is
- * covering it, its header and message box are decoration rather than controls,
- * and leaving them focusable would let Tab walk out of the panel and into a
- * composer nobody can see.
- */
-export const useContextualBarOverlay = (): boolean => {
-  const viewportWidth = useUiStore((state) => state.viewportWidth);
-  const serverRailWidth = useUiStore((state) => state.serverRailWidth);
-  const sidebarWidth = useUiStore((state) => state.sidebarWidth);
-  const sidebarOpen = useUiStore((state) => state.sidebarOpen);
-
-  return contextualBarOverlays(layoutWidth(viewportWidth, serverRailWidth), sidebarOpen ? sidebarWidth : 0);
 };
 
 /**

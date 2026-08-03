@@ -1,5 +1,8 @@
 import { create } from 'zustand';
 
+import { contextualBarOverlays, layoutWidth } from '@/lib/resize';
+import { useUiStore } from '@/stores/ui-store';
+
 /**
  * A panel in the contextual bar, with whatever it needs to render.
  *
@@ -95,3 +98,23 @@ export const useContextualBarStore = create<ContextualBarStore>((set, get) => ({
 
 /** The panel on screen, or `null` when the bar is closed. */
 export const useCurrentTab = (): ContextualTab | null => useContextualBarStore((state) => state.stack.at(-1) ?? null);
+
+/**
+ * Whether the bar is laid out over the conversation rather than beside it.
+ *
+ * The conversation has to know: while a panel is covering it, its header and
+ * message box are decoration rather than controls, and leaving them focusable
+ * would let Tab walk out of the panel and into a composer nobody can see. So do
+ * the panels, whose actions can point at something the panel is standing on.
+ *
+ * Lives here rather than with the bar itself so a panel can ask without
+ * importing the component that renders it, which renders that panel.
+ */
+export const useContextualBarOverlay = (): boolean => {
+  const viewportWidth = useUiStore((state) => state.viewportWidth);
+  const serverRailWidth = useUiStore((state) => state.serverRailWidth);
+  const sidebarWidth = useUiStore((state) => state.sidebarWidth);
+  const sidebarOpen = useUiStore((state) => state.sidebarOpen);
+
+  return contextualBarOverlays(layoutWidth(viewportWidth, serverRailWidth), sidebarOpen ? sidebarWidth : 0);
+};

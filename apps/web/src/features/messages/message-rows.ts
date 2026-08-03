@@ -101,6 +101,20 @@ export const buildMessageRows = (messages: Message[], groupingMs: number): Messa
 };
 
 /**
+ * Which row draws the message with this id, or `-1` when none of them does.
+ *
+ * The row that holds it rather than the one keyed by it: an upload of five
+ * photos is five messages in one album, and jumping to the third of them has to
+ * land on the album, which is the only thing on the screen that exists.
+ */
+export const rowIndexOfMessage = (rows: readonly MessageRow[], messageId: string): number =>
+  rows.findIndex((row) => row.kind === 'message' && row.messages.some((message) => message.id === messageId));
+
+/** Whether this row draws the message with that id — the same question, per row. */
+export const rowHasMessage = (row: MessageRow, messageId: string | null): boolean =>
+  messageId !== null && row.kind === 'message' && row.messages.some((message) => message.id === messageId);
+
+/**
  * The reactions an album shows: one pill per emoji, counted by person rather
  * than by file, because reacting to three photos of one upload is one reaction
  * to the album as far as anyone reading it is concerned.

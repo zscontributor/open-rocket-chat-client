@@ -15,11 +15,21 @@ import {
   groupingPeriodMs,
   useCapabilities,
 } from '@/features/server/use-capabilities';
+import { cn } from '@/lib/cn';
 import { describeError } from '@/lib/errors';
+import { showToast } from '@/stores/toast-store';
 import { Button } from '@/ui/button';
 import { Icons, Spinner } from '@/ui/icon';
+import { useJumpStore } from './jump-store';
 import { MessageItem, type MessageAbilities } from './message-item';
-import { buildMessageRows, flaggedMessages, reactedMessages, type MessageRow } from './message-rows';
+import {
+  buildMessageRows,
+  flaggedMessages,
+  reactedMessages,
+  rowHasMessage,
+  rowIndexOfMessage,
+  type MessageRow,
+} from './message-rows';
 import { useDeleteMessage, useMessages, useSetMessageFlag, useToggleReaction } from './use-messages';
 
 /**
@@ -42,6 +52,20 @@ const LOAD_MORE_THRESHOLD = 400;
  * and it would be a lie shown at any other distance than the one that stops it.
  */
 const STICK_TO_BOTTOM_THRESHOLD = 80;
+
+/**
+ * How many pages of history a jump will load looking for its message.
+ *
+ * The timeline pages backwards from the newest message and has no way to open
+ * in the middle, so reaching something older means loading everything between.
+ * A search can return a message from a year ago, and walking back to it a page
+ * at a time would be hundreds of requests — this is where it stops asking and
+ * says so instead.
+ */
+const JUMP_PAGE_BUDGET = 20;
+
+/** How long a message stays marked after a jump lands on it. */
+const LANDING_FLASH_MS = 2_500;
 
 /**
  * The message timeline.
@@ -87,6 +111,15 @@ export const MessageList = ({
   const previousFirstKey = useRef<string | null>(null);
   /** Scrollable height at the previous commit, which is how much that page added. */
   const previousHeight = useRef(0);
+
+  // Only this room's jumps: the request outlives the click that made it, and a
+  // message named while another room was open is not this timeline's to find.
+  const jumpTo = useJumpStore((state) => (state.target?.roomId === roomId ? state.target.messageId : null));
+  const clearJump = useJumpStore((state) => state.clear);
+  /** The message a jump landed on, marked for a moment so the eye can find it. */
+  const [landedOn, setLandedOn] = useState<string | null>(null);
+  /** The jump being worked on, and how many more pages it may spend looking. */
+  const jumpBudget = useRef({ messageId: null as string | null, pages: 0 });
 
   const messages = useMemo(() => data?.messages ?? [], [data]);
   const grouping = groupingPeriodMs(capabilities);
@@ -206,6 +239,65 @@ export const MessageList = ({
   }, [onScroll]);
 
   /**
+   * Reaching a message somebody pointed at — a search result, so far.
+   *
+   * The timeline pages backwards from the newest message and cannot open in the
+   * middle, so a message it has not loaded is reached by loading the history in
+   * front of it. That is done a page at a time rather than in a loop: each page
+   * changes `rows`, which runs this again, so the walk back is the render cycle
+   * itself and the spinner at the top of the list is already reporting it.
+   *
+   * The budget is what makes it stop. Rather than freeze on a message from last
+   * year, it gives up after a fixed number of pages and says which wall it hit
+   * — a history too long to walk, or a message no longer in the room at all.
+   */
+  useEffect(() => {
+    if (!jumpTo) {
+      jumpBudget.current = { messageId: null, pages: 0 };
+      return;
+    }
+
+    // A new target is a fresh budget; the same one is still spending its own.
+    if (jumpBudget.current.messageId !== jumpTo) {
+      jumpBudget.current = { messageId: jumpTo, pages: JUMP_PAGE_BUDGET };
+    }
+
+    const index = rowIndexOfMessage(rows, jumpTo);
+
+    if (index >= 0) {
+      // Set before the scroll, not after: bringing rows into view has them
+      // measured, and the effect that reads this would spend those frames
+      // pulling the timeline back to the bottom it was just taken from.
+      stickToBottom.current = false;
+      setAtBottom(false);
+      virtualizer.scrollToIndex(index, { align: 'center' });
+      setLandedOn(jumpTo);
+      clearJump();
+      return;
+    }
+
+    if (!hasNextPage || jumpBudget.current.pages === 0) {
+      clearJump();
+      showToast({ tone: 'error', message: hasNextPage ? t('jump.tooFarBack') : t('jump.missing') });
+      return;
+    }
+
+    if (!isFetchingNextPage) {
+      jumpBudget.current.pages -= 1;
+      void fetchNextPage();
+    }
+  }, [jumpTo, rows, hasNextPage, isFetchingNextPage, fetchNextPage, clearJump, virtualizer, t]);
+
+  // Long enough to find the message by eye, short enough that the mark is gone
+  // by the time the room is being read rather than searched.
+  useEffect(() => {
+    if (!landedOn) return;
+
+    const timer = setTimeout(() => setLandedOn(null), LANDING_FLASH_MS);
+    return () => clearTimeout(timer);
+  }, [landedOn]);
+
+  /**
    * A row of the timeline, and the actions it offers.
    *
    * An album is one thing on the screen, so it is one thing to act on: what
@@ -310,7 +402,14 @@ export const MessageList = ({
                 // height of a one-line message, and estimating would misplace
                 // everything below it.
                 ref={virtualizer.measureElement}
-                className="absolute top-0 left-0 w-full"
+                className={cn(
+                  'absolute top-0 left-0 w-full',
+                  // A wash rather than a border or a ring: the row has just been
+                  // measured to the pixel, and anything that changes its height
+                  // would move everything below the message being pointed at.
+                  'transition-colors duration-700',
+                  rowHasMessage(row, landedOn) && 'bg-accent-subtle',
+                )}
                 style={{ transform: `translateY(${virtualRow.start}px)` }}
               >
                 {row.kind === 'date' ? (

@@ -1,7 +1,15 @@
 import type { Message } from '@open-rocket-chat/client-sdk';
 import { describe, expect, it } from 'vitest';
 
-import { buildMessageRows, flaggedMessages, mergeReactions, reactedMessages, type MessageRow } from '../message-rows';
+import {
+  buildMessageRows,
+  flaggedMessages,
+  mergeReactions,
+  reactedMessages,
+  rowHasMessage,
+  rowIndexOfMessage,
+  type MessageRow,
+} from '../message-rows';
 
 const GROUPING_MS = 5 * 60 * 1000;
 
@@ -248,5 +256,55 @@ describe('flaggedMessages', () => {
 
     expect(flaggedMessages(messages, 'pinned').map((entry) => entry.id)).toEqual(['b']);
     expect(flaggedMessages(messages, 'starred')).toEqual([]);
+  });
+});
+
+describe('rowIndexOfMessage', () => {
+  const rows = buildMessageRows(
+    [
+      message({ id: 'a', createdAt: '2026-08-02T10:00:00.000Z', text: 'first' }),
+      upload('b', '2026-08-02T10:01:00.000Z'),
+      upload('c', '2026-08-02T10:01:01.000Z'),
+    ],
+    GROUPING_MS,
+  );
+
+  it('finds the row a message is drawn in', () => {
+    expect(rowIndexOfMessage(rows, 'a')).toBe(1);
+  });
+
+  it('finds the album a file was uploaded into, not a row of its own', () => {
+    // 'b' and 'c' are one upload and share a row, so both answer with it — a
+    // jump to the third photo has to land on the album, the only thing there.
+    expect(rowIndexOfMessage(rows, 'c')).toBe(2);
+    expect(rowIndexOfMessage(rows, 'b')).toBe(2);
+  });
+
+  it('says so when the message is not loaded', () => {
+    expect(rowIndexOfMessage(rows, 'nowhere')).toBe(-1);
+  });
+
+  it('never answers with a date separator', () => {
+    // The first row is one, and its key is built from the message id below it.
+    expect(rows[0]?.kind).toBe('date');
+    expect(rowIndexOfMessage(rows, 'date-a')).toBe(-1);
+  });
+});
+
+describe('rowHasMessage', () => {
+  const rows = buildMessageRows([message({ id: 'a', createdAt: '2026-08-02T10:00:00.000Z' })], GROUPING_MS);
+  const [separator, only] = rows;
+
+  it('answers for the row that draws it', () => {
+    expect(only && rowHasMessage(only, 'a')).toBe(true);
+    expect(only && rowHasMessage(only, 'b')).toBe(false);
+  });
+
+  it('is false for a date separator, which draws no message', () => {
+    expect(separator && rowHasMessage(separator, 'a')).toBe(false);
+  });
+
+  it('is false when nothing is being marked', () => {
+    expect(only && rowHasMessage(only, null)).toBe(false);
   });
 });

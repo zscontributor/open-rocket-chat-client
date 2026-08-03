@@ -4,6 +4,10 @@
   "loadingOlder": "Đang tải tin nhắn cũ hơn…",
   "loading": "Đang tải tin nhắn…",
   "jumpToRecent": "Về tin mới nhất",
+  "jump": {
+    "tooFarBack": "Tin nhắn đó nằm xa hơn phần lịch sử mà dòng thời gian tải được.",
+    "missing": "Không còn thấy tin nhắn đó trong cuộc trò chuyện này."
+  },
   "edited": "đã sửa",
   "encrypted": "Tin nhắn này được mã hoá đầu cuối nên không hiển thị được.",
   "mention": {

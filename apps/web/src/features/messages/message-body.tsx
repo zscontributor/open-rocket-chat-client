@@ -21,12 +21,13 @@ import { useEmojiIndex } from './use-emoji';
  * preview cannot drift apart — the whole point of the preview is that what it
  * shows is what the room will show.
  *
- * `mark` is styled here rather than left to the browser, whose default is black
- * on yellow: it is the one rule that has to hold against a dark panel as well
- * as a light one, so it is taken from the theme's accent like everything else.
+ * `mark` is styled here rather than left to the browser: the default black on
+ * yellow is close to right, but it is one flat pair for both colour schemes,
+ * and on a dark panel it reads as a hole punched in the page. The two schemes
+ * get a yellow each, in `styles.css` beside the syntax colours.
  */
 const PROSE =
-  '[&_a]:text-link [&_a]:underline [&_blockquote]:border-line [&_blockquote]:text-content-muted [&_blockquote]:my-1 [&_blockquote]:border-l-2 [&_blockquote]:pl-3 [&_code]:bg-sunken [&_code]:rounded [&_code]:px-1 [&_code]:py-0.5 [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_mark]:bg-accent-subtle [&_mark]:text-content [&_mark]:rounded-sm [&_mark]:px-0.5 [&_mark]:font-medium [&_ol]:my-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-0 [&_pre]:bg-sunken [&_pre]:my-1 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:p-3 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_table]:my-1 [&_td]:border-line [&_td]:border [&_td]:px-2 [&_td]:py-1 [&_th]:border-line [&_th]:border [&_th]:px-2 [&_th]:py-1 [&_u]:underline [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-5';
+  '[&_a]:text-link [&_a]:underline [&_blockquote]:border-line [&_blockquote]:text-content-muted [&_blockquote]:my-1 [&_blockquote]:border-l-2 [&_blockquote]:pl-3 [&_code]:bg-sunken [&_code]:rounded [&_code]:px-1 [&_code]:py-0.5 [&_h1]:text-base [&_h1]:font-semibold [&_h2]:text-sm [&_h2]:font-semibold [&_h3]:text-sm [&_h3]:font-semibold [&_mark]:bg-marked [&_mark]:text-marked-content [&_mark]:rounded-sm [&_mark]:px-0.5 [&_mark]:font-medium [&_ol]:my-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:my-0 [&_pre]:bg-sunken [&_pre]:my-1 [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:p-3 [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_table]:my-1 [&_td]:border-line [&_td]:border [&_td]:px-2 [&_td]:py-1 [&_th]:border-line [&_th]:border [&_th]:px-2 [&_th]:py-1 [&_u]:underline [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-5';
 
 /** Shared, so a body with no code block hands react-markdown the same empty list. */
 const NO_REHYPE_PLUGINS: Options['rehypePlugins'] = [];
